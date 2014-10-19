@@ -31,3 +31,9 @@
 *.app
 
 # Actual Project Executables
+pcg-demo
+codebook
+cppref-sample
+make-partytrick
+spew
+use-partytrick
