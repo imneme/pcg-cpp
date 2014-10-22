@@ -527,19 +527,6 @@ auto bounded_rand(RngType& rng, typename RngType::result_type upper_bound)
     }
 }
 
-template <typename RngType>
-auto fast_bounded_rand(RngType& rng, typename RngType::result_type upper_bound)
-        -> typename RngType::result_type
-{
-    typedef typename RngType::result_type rtype;
-    rtype mask = (1u << (31 - __builtin_clz(upper_bound - 1))) - 1;
-    for (;;) {
-        rtype r = rng() & mask;
-        if (r <= (upper_bound - 1))
-            return r;
-    }
-}
-
 template <typename Iter, typename RandType>
 void shuffle(Iter from, Iter to, RandType&& rng)
 {
