@@ -1153,7 +1153,7 @@ public:
 
     static constexpr size_t table_size  = 1UL << table_pow2;
     static constexpr size_t table_shift = stypebits - table_pow2;
-    static const state_type table_mask =
+    static constexpr state_type table_mask =
         (state_type(1U) << table_pow2) - state_type(1U);
 
     static constexpr bool   may_tick  =
