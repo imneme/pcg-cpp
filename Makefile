@@ -31,7 +31,6 @@ install: all
 	install -m 0644 include/*.hpp $PREFIX/include
 
 test:   all
-	cd test-low; $(MAKE) test
 	cd test-high; $(MAKE) test
 
 clean:
