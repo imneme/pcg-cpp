@@ -1171,7 +1171,7 @@ public:
 
     PCG_NOINLINE void advance_table();
 
-    PCG_NOINLINE void advance_table(result_type delta, bool forwards = true);
+    PCG_NOINLINE void advance_table(state_type delta, bool isForwards = true);
 
     result_type& get_extended_value()
     {
@@ -1448,20 +1448,26 @@ template <bitcount_t table_pow2, bitcount_t advance_pow2,
           typename baseclass, typename extvalclass, bool kdd>
 void
 extended<table_pow2,advance_pow2,baseclass,extvalclass,kdd>::advance_table(
-        result_type delta, bool forwards)
+        state_type delta, bool isForwards)
 {
-    bool carry = false;
+    typedef typename baseclass::state_type   base_state_t;
+    typedef typename extvalclass::state_type ext_state_t;
+    constexpr bitcount_t basebits = sizeof(base_state_t)*8;
+    constexpr bitcount_t extbits  = sizeof(ext_state_t)*8;
+    static_assert(basebits <= extbits || advance_pow2 > 0,
+                  "Current implementation might overflow its carry");
+
+    base_state_t carry = 0;
     for (size_t i = 0; i < table_size; ++i) {
-        if (carry) {
-            if (forwards) {
-                carry = insideout::external_step(data_[i],i+1);
-            } else {
-                carry = insideout::external_advance(data_[i],i+1,1,false);
-            }
+        base_state_t total_delta = carry + delta;
+        ext_state_t  trunc_delta = ext_state_t(total_delta);
+        if (basebits > extbits) {
+            carry = total_delta >> extbits;
+        } else {
+            carry = 0;
         }
-        bool carry2 =
-            insideout::external_advance(data_[i],i+1, delta, forwards);
-        carry = carry || carry2;
+        carry +=
+            insideout::external_advance(data_[i],i+1, trunc_delta, isForwards);
     }
 }
 
