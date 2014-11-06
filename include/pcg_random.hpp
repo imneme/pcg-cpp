@@ -1145,7 +1145,7 @@ public:
     typedef typename baseclass::result_type result_type;
     typedef inside_out<extvalclass> insideout;
 
-public:
+private:
     static constexpr bitcount_t rtypebits = sizeof(result_type)*8;
     static constexpr bitcount_t stypebits = sizeof(state_type)*8;
 
