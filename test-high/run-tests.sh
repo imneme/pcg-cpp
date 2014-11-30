@@ -85,7 +85,7 @@ rm -f actual/*
 
 find actual -type f -size -80c -delete
 
-if diff -ru expected actual
+if diff -ru -x .gitignore expected actual
 then
     echo All tests succeeded.
 else
