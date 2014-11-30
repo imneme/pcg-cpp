@@ -1,0 +1,55 @@
+pcg16_once_insecure:
+      -  result:      16-bit unsigned int
+      -  period:      2^16   (* 2^15 streams)
+      -  size:        4 bytes
+
+Round 1:
+  16bit: 0xa9cf 0x42a8 0x7c32 0xa6da 0xbcf5 0xa615 0x901c 0x3760 0xf924 0xcf8a
+  Again: 0xbcf5 0xa615 0x901c 0x3760 0xf924 0xcf8a 0x9d45 0x7439 0x4a10 0xf3a4
+  Coins: HHTTHHHTTHHHTTHHTHTTTTHHTTHTTHHHHHHHHHTHTHTHTHHHTTTTHHHTHHTHHHHTH
+  Rolls: 6 1 2 6 2 1 5 2 3 2 3 3 1 1 3 3 2 3 4 6 2 3 5 4 1 6 6 5 1 4 6 5 1
+   -->   rolling dice used 33 random numbers
+  Cards: Ts Qh 6d 5d Ac 7s 9h 9c Kh 4s 8d Js 2h Tc 8h 8c 5c 2d 6h Jd Qd 7h
+	 4d Jc 3c 3s 3d 2s 7c 5h Td As 2c Ad 6s Kd Kc Th 9s 9d Jh 7d Qs 8s
+	 Ks 3h 4h 6c Qc Ah 4c 5s
+
+Round 2:
+  16bit: 0x889b 0xe169 0xe37e 0x0bc6 0xce41 0x0d37 0xcab4 0x1f40 0xd818 0xd697
+  Again: 0xce41 0x0d37 0xcab4 0x1f40 0xd818 0xd697 0xdca2 0x3b69 0xbe2c 0xfe64
+  Coins: HHHTTTTTTTTHHHTTHTHHTTHHHTHHTHTTTTHHHHTTHHHTTHTHHTHTHHHHTHHHHTHTT
+  Rolls: 5 5 6 5 4 1 5 3 3 3 6 3 3 4 2 6 6 4 6 6 2 3 3 2 6 2 1 1 6 4 3 1 1
+   -->   rolling dice used 33 random numbers
+  Cards: 8d Qs Kh Kd 2h 3d 5d As 4d 3c Js 6d Jd Ac 2d 2s Ad Qd Td 4h 8s 7d
+	 5s Jh Ts 2c 3s 8c 4c 7c 9d Tc 9s Ah Qh Ks Qc Jc 7h 9c 6c 3h 4s 6h
+	 5h 6s Th 9h Kc 7s 8h 5c
+
+Round 3:
+  16bit: 0x8911 0xbca5 0x95da 0x72b9 0x24a9 0x4ea6 0x49b9 0xe163 0xa8ef 0xba3f
+  Again: 0x24a9 0x4ea6 0x49b9 0xe163 0xa8ef 0xba3f 0x85bf 0x9269 0x8704 0x09af
+  Coins: HTHTHTHHHTHTHHHHHTTTHHTHTHHTTTHTTHHTTTTTHHTTTHTHHTHTHHHTTHTTHTTTT
+  Rolls: 6 1 5 1 6 3 1 1 4 6 3 5 6 1 3 2 4 2 2 6 5 2 5 4 1 2 6 5 4 3 2 5 4
+   -->   rolling dice used 33 random numbers
+  Cards: 3d 4d Qh 7c 2c 6h 3c 3s 9s Td 5h 9c 5d 4h 2h Qs Kc 4s 9d Qd 5s 6d
+	 Qc 2d As 8c 4c Kd Tc Ac 5c Ts 3h Ad Jh 8s 6c 6s 8h Jc 9h Ks Jd 7d
+	 7s 2s 8d 7h Js Kh Ah Th
+
+Round 4:
+  16bit: 0xc5d7 0x350e 0xf36d 0x882d 0x0281 0x8468 0xe1d3 0xe079 0x359a 0x22c7
+  Again: 0x0281 0x8468 0xe1d3 0xe079 0x359a 0x22c7 0x31e7 0x93f1 0x1959 0x0138
+  Coins: THTHHHTHHHTTHTHHTHHTTHHHHHHTTHTHHTHTHTTHTHTTHTHTTTHTHTTHTHHTTTHHT
+  Rolls: 2 3 2 6 6 5 2 2 5 4 1 4 1 6 3 4 3 5 1 6 5 2 3 4 4 3 3 6 3 1 6 2 3
+   -->   rolling dice used 33 random numbers
+  Cards: 9h 6s Ks Qh Ts 7h Jc 3c Jh Jd Th 4s Tc 5c 4h Ac Td 7s 3d 2s 2d Qs
+	 6h 9s 5d 4d 2h 4c 2c As Ad 8c 6d 7c Qc 9d Kd 9c 8s 6c 5h Ah 8h Kh
+	 Qd 3s 7d Js 5s Kc 3h 8d
+
+Round 5:
+  16bit: 0xa043 0x08cd 0x6164 0xf7b3 0x457c 0x7f19 0x0473 0x882b 0x5e29 0x99ee
+  Again: 0x457c 0x7f19 0x0473 0x882b 0x5e29 0x99ee 0x811c 0x25fe 0x7835 0x7c2a
+  Coins: TTTTTHHHHHHHHHHTHHTHHHHHTTTHTHTHHHHHTHTTTHTHHHTTTHTHHTHHHTTHTTHHH
+  Rolls: 4 2 1 1 6 6 6 4 1 3 5 1 2 5 2 5 6 2 1 5 1 4 6 2 2 6 6 3 4 4 6 4 1
+   -->   rolling dice used 33 random numbers
+  Cards: 4c 9d 2h 3h 5d 2d 7c As 3s 9s Kh Qd Ks 8c 8d 4d 7d 6c 8h 9h Kc Js
+	 5h 4s Qc Qh Ts Qs Tc Jd Ad Th 7s Jh 3d 7h 5c Ah Kd 9c Jc Ac 6d 3c
+	 2s 8s 4h Td 5s 6h 2c 6s
+
