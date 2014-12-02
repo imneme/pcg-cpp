@@ -44,7 +44,11 @@ CC       = $(CXX)       # Cheat so that linking uses the C++ compiler
 
 # extra warnings
 ifeq ($(CXX),clang++)
-	CPPFLAGS += -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic
+	CPPFLAGS += \
+		-Weverything \
+		-Wno-c++98-compat \
+		-Wno-c++98-compat-pedantic \
+		-Wno-date-time
 endif
 
 all: $(TARGETS)
