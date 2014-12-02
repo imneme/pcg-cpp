@@ -48,7 +48,8 @@ ifeq ($(CXX),clang++)
 		-Weverything \
 		-Wno-c++98-compat \
 		-Wno-c++98-compat-pedantic \
-		-Wno-date-time
+		-Wno-date-time \
+		-Wno-unused-macros
 endif
 
 all: $(TARGETS)
