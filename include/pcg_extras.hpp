@@ -295,7 +295,7 @@ inline itype rotl(itype value, bitcount_t rot)
 {
     constexpr bitcount_t bits = sizeof(itype) * 8;
     constexpr bitcount_t mask = bits - 1;
-#if PCG_USE_ZEROCHECK_ROTATE_IDIOM
+#ifdef PCG_USE_ZEROCHECK_ROTATE_IDIOM
     return rot ? (value << rot) | (value >> (bits - rot)) : value;
 #else
     return (value << rot) | (value >> ((- rot) & mask));
@@ -307,7 +307,7 @@ inline itype rotr(itype value, bitcount_t rot)
 {
     constexpr bitcount_t bits = sizeof(itype) * 8;
     constexpr bitcount_t mask = bits - 1;
-#if PCG_USE_ZEROCHECK_ROTATE_IDIOM
+#ifdef PCG_USE_ZEROCHECK_ROTATE_IDIOM
     return rot ? (value >> rot) | (value << (bits - rot)) : value;
 #else
     return (value >> rot) | (value << ((- rot) & mask));
@@ -321,7 +321,7 @@ inline itype rotr(itype value, bitcount_t rot)
  *
  * These overloads will be preferred over the general template code above.
  */
-#if PCG_USE_INLINE_ASM && __GNUC__ && (__x86_64__  || __i386__)
+#if defined(PCG_USE_INLINE_ASM) && defined(__GNUC__) && (defined(__x86_64__)  || defined(__i386__))
 
 inline uint8_t rotr(uint8_t value, bitcount_t rot)
 {
