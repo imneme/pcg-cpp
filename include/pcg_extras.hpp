@@ -531,13 +531,17 @@ template <typename Iter, typename RandType>
 void shuffle(Iter from, Iter to, RandType&& rng)
 {
     typedef typename std::iterator_traits<Iter>::difference_type delta_t;
+    typedef typename std::remove_reference<RandType>::type::result_type result_t;
     auto count = to - from;
     while (count > 1) {
-        delta_t chosen(bounded_rand(rng, count));
+        delta_t chosen = static_cast<delta_t>(bounded_rand(
+            rng,
+            static_cast<result_t>(count)
+        ));
         --count;
         --to;
         using std::swap;
-        swap(*(from+chosen), *to);
+        swap(*(std::next(from, chosen)), *to);
     }
 }
 
