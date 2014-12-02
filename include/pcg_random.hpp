@@ -75,6 +75,7 @@
 #ifndef PCG_RAND_HPP_INCLUDED
 #define PCG_RAND_HPP_INCLUDED 1
 
+#include <algorithm>
 #include <cinttypes>
 #include <cstddef>
 #include <cstdlib>
@@ -82,6 +83,7 @@
 #include <cassert>
 #include <limits>
 #include <iostream>
+#include <iterator>
 #include <type_traits>
 #include <utility>
 #include <locale>
@@ -1360,7 +1362,10 @@ bool operator==(const extended<table_pow2, advance_pow2,
     auto& base_lhs = static_cast<const baseclass&>(lhs);
     auto& base_rhs = static_cast<const baseclass&>(rhs);
     return base_lhs == base_rhs
-        && !memcmp((void*) lhs.data_, (void*) rhs.data_, sizeof(lhs.data_));
+        && !std::equal(
+                std::begin(lhs.data_), std::end(lhs.data_),
+                std::begin(rhs.data_)
+            );
 }
 
 template <bitcount_t table_pow2, bitcount_t advance_pow2,
