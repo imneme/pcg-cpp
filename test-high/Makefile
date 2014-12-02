@@ -38,7 +38,7 @@ TARGETS           = \
     check-pcg64_oneseq check-pcg64_oneseq_once_insecure check-pcg64_unique \
     check-pcg128_once_insecure check-pcg128_oneseq_once_insecure
 
-CPPFLAGS += -I../include 
+CPPFLAGS += -I../include -Wall -Wextra
 CXXFLAGS += -std=c++11
 CC       = $(CXX)       # Cheat so that linking uses the C++ compiler
 
