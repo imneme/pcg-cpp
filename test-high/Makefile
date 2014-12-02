@@ -42,6 +42,11 @@ CPPFLAGS += -I../include -Wall -Wextra
 CXXFLAGS += -std=c++11
 CC       = $(CXX)       # Cheat so that linking uses the C++ compiler
 
+# extra warnings
+ifeq ($(CXX),clang++)
+	CPPFLAGS += -Weverything -Wno-c++98-compat -Wno-c++98-compat-pedantic
+endif
+
 all: $(TARGETS)
 
 test: $(TARGETS)
