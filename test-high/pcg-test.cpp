@@ -53,7 +53,7 @@
 using namespace std;
 using pcg_extras::operator<<;
 
-#if !defined(PCG_EMULATED_128BIT_MATH) || !defined(AWKWARD_128BIT_CODE)
+#if !PCG_EMULATED_128BIT_MATH || !AWKWARD_128BIT_CODE
 
 int main(int argc, char** argv)
 {
