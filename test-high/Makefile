@@ -38,19 +38,17 @@ TARGETS           = \
     check-pcg64_oneseq check-pcg64_oneseq_once_insecure check-pcg64_unique \
     check-pcg128_once_insecure check-pcg128_oneseq_once_insecure
 
-CPPFLAGS += -I../include -Wall -Wextra
+# special flags for some compilers
+CPPFLAGS_clang++ += \
+	-Weverything \
+	-Wno-c++98-compat \
+	-Wno-c++98-compat-pedantic \
+	-Wno-date-time \
+	-Wno-unused-macros
+
+CPPFLAGS += -I../include -Wall -Wextra $(CPPFLAGS_$(CXX))
 CXXFLAGS += -std=c++11
 CC       = $(CXX)       # Cheat so that linking uses the C++ compiler
-
-# extra warnings
-ifeq ($(CXX),clang++)
-	CPPFLAGS += \
-		-Weverything \
-		-Wno-c++98-compat \
-		-Wno-c++98-compat-pedantic \
-		-Wno-date-time \
-		-Wno-unused-macros
-endif
 
 all: $(TARGETS)
 
