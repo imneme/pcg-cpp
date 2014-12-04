@@ -323,7 +323,7 @@ protected:
     specific_stream() = default;
 
     specific_stream(itype specific_seq)
-        : inc_((specific_seq << 1) | itype(1U))
+        : inc_(itype(specific_seq << 1) | itype(1U))
     {
         // Nothing (else) to do.
     }
@@ -382,7 +382,7 @@ public:
 
     static constexpr result_type max()
     {
-        return ~result_type(0UL);
+        return result_type(~result_type(0UL));
     }
 
 protected:
@@ -424,7 +424,7 @@ protected:
     static itype distance(itype cur_state, itype newstate, itype cur_mult,
                           itype cur_plus, itype mask = ~itype(0U));
 
-    itype distance(itype newstate, itype mask = ~itype(0U)) const
+    itype distance(itype newstate, itype mask = itype(~itype(0U))) const
     {
         return distance(state_, newstate, multiplier(), increment(), mask);
     }
