@@ -483,10 +483,10 @@ void generate_to_impl(SeedSeq&& generator, DestIter dest,
         generator.generate(buffer, buffer+FROM_ELEMS);
         uneven_copy(buffer, dest, dest+size);
     } else {
-        uint32_t* buffer = new uint32_t[FROM_ELEMS];
+        uint32_t* buffer = static_cast<uint32_t*>(malloc(GEN_SIZE * FROM_ELEMS));
         generator.generate(buffer, buffer+FROM_ELEMS);
         uneven_copy(buffer, dest, dest+size);
-        delete[] buffer;
+        free(static_cast<void*>(buffer));
     }
 }
 
