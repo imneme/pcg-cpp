@@ -135,7 +135,7 @@ operator<<(std::basic_ostream<CharT,Traits>& out, pcg128_t value)
         }
         if (highpart != 0 || desired_width > 16)
             out << highpart;
-        CharT oldfill;
+        CharT oldfill = '\0';
         if (highpart != 0) {
             out.width(16);
             oldfill = out.fill('0');
@@ -393,7 +393,7 @@ SrcIter uneven_copy_impl(
     constexpr bitcount_t SCALE     = SRC_SIZE / DEST_SIZE;
 
     size_t count = 0;
-    src_t value;
+    src_t value = 0;
 
     while (dest_first != dest_last) {
         if ((count++ % SCALE) == 0)
