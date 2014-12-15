@@ -137,7 +137,7 @@ struct default_increment {
 PCG_DEFINE_CONSTANT(uint8_t,  default, multiplier, 141U)
 PCG_DEFINE_CONSTANT(uint8_t,  default, increment,  77U)
 
-PCG_DEFINE_CONSTANT(uint16_t, default, multiplier, 25385U)
+PCG_DEFINE_CONSTANT(uint16_t, default, multiplier, 12829U)
 PCG_DEFINE_CONSTANT(uint16_t, default, increment,  47989U)
 
 PCG_DEFINE_CONSTANT(uint32_t, default, multiplier, 747796405U)
