@@ -75,6 +75,7 @@
 #ifndef PCG_RAND_HPP_INCLUDED
 #define PCG_RAND_HPP_INCLUDED 1
 
+#include <algorithm>
 #include <cinttypes>
 #include <cstddef>
 #include <cstdlib>
@@ -82,6 +83,7 @@
 #include <cassert>
 #include <limits>
 #include <iostream>
+#include <iterator>
 #include <type_traits>
 #include <utility>
 #include <locale>
@@ -321,7 +323,7 @@ protected:
     specific_stream() = default;
 
     specific_stream(itype specific_seq)
-        : inc_((specific_seq << 1) | itype(1U))
+        : inc_(itype(specific_seq << 1) | itype(1U))
     {
         // Nothing (else) to do.
     }
@@ -380,7 +382,7 @@ public:
 
     static constexpr result_type max()
     {
-        return ~result_type(0UL);
+        return result_type(~result_type(0UL));
     }
 
 protected:
@@ -422,7 +424,7 @@ protected:
     static itype distance(itype cur_state, itype newstate, itype cur_mult,
                           itype cur_plus, itype mask = ~itype(0U));
 
-    itype distance(itype newstate, itype mask = ~itype(0U)) const
+    itype distance(itype newstate, itype mask = itype(~itype(0U))) const
     {
         return distance(state_, newstate, multiplier(), increment(), mask);
     }
@@ -1360,7 +1362,10 @@ bool operator==(const extended<table_pow2, advance_pow2,
     auto& base_lhs = static_cast<const baseclass&>(lhs);
     auto& base_rhs = static_cast<const baseclass&>(rhs);
     return base_lhs == base_rhs
-        && !memcmp((void*) lhs.data_, (void*) rhs.data_, sizeof(lhs.data_));
+        && !std::equal(
+                std::begin(lhs.data_), std::end(lhs.data_),
+                std::begin(rhs.data_)
+            );
 }
 
 template <bitcount_t table_pow2, bitcount_t advance_pow2,

@@ -126,7 +126,6 @@ int main(int argc, char** argv)
             cout << (rng(2) ? "H" : "T");
         cout << endl;
 
-        RNG rng_copy{rng};
         /* Roll some dice */
         printf("  Rolls:");
         for (int i = 0; i < 33; ++i)
