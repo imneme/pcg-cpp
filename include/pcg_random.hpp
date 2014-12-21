@@ -81,7 +81,7 @@
 #include <cstring>
 #include <cassert>
 #include <limits>
-#include <iostream>
+#include <iosfwd>
 #include <type_traits>
 #include <utility>
 #include <locale>
