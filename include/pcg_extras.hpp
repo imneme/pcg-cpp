@@ -157,7 +157,7 @@ operator<<(std::basic_ostream<CharT,Traits>& out, pcg128_t value)
     do {
         auto div = value / BASE;
         auto mod = uint32_t(value - (div * BASE));
-        *(--pos) = '0' + mod;
+        *(--pos) = '0' + char(mod);
         value = div;
     } while(value != pcg128_t(0ULL));
     return out << pos;
