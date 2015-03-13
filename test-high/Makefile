@@ -44,6 +44,7 @@ CPPFLAGS_clang++ += \
 	-Wno-c++98-compat \
 	-Wno-c++98-compat-pedantic \
 	-Wno-date-time \
+	-Wno-undef \
 	-Wno-unused-macros
 
 CPPFLAGS += -I../include -Wall -Wextra $(CPPFLAGS_$(CXX))
