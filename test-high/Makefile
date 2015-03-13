@@ -41,6 +41,7 @@ TARGETS           = \
 # special flags for some compilers
 CPPFLAGS_clang++ += \
 	-Weverything \
+	-Wno-unknown-warning-option \
 	-Wno-c++98-compat \
 	-Wno-c++98-compat-pedantic \
 	-Wno-date-time \
