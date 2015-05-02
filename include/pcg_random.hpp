@@ -674,9 +674,10 @@ itype operator-(const engine<xtype,itype,
                                output_mixin,output_previous,
                                stream_mixin_rhs, multiplier_mixin_rhs>& rhs)
 {
-    if (lhs.multiplier() != rhs.multiplier()
-        || lhs.increment() != rhs.increment())
-        throw std::logic_error("incomparable generators");
+    static_assert(
+        std::is_same<stream_mixin_lhs, stream_mixin_rhs>::value &&
+            std::is_same<multiplier_mixin_lhs, multiplier_mixin_rhs>::value,
+        "Incomparable generators");
     return rhs.distance(lhs.state_);
 }
 
