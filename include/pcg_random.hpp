@@ -1700,8 +1700,8 @@ typedef pcg_engines::oneseq_xsl_rr_rr_128_128   pcg128_oneseq_once_insecure;
 // and can be called twice to generate 64 bits, but does not required
 // 128-bit math; on 32-bit systems, it's faster than pcg64 as well.
 
-typedef pcg_engines::ext_setseq_xsh_rr_64_32<6,16,true>     pcg32_k2;
-typedef pcg_engines::ext_oneseq_xsh_rs_64_32<6,32,true>     pcg32_k2_fast;
+typedef pcg_engines::ext_setseq_xsh_rr_64_32<1,16,true>     pcg32_k2;
+typedef pcg_engines::ext_oneseq_xsh_rs_64_32<1,32,true>     pcg32_k2_fast;
 
 // These eight extended RNGs have about as much state as arc4random
 //
