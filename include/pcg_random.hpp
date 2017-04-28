@@ -1375,7 +1375,7 @@ inline bool operator!=(const extended<table_pow2, advance_pow2,
                        const extended<table_pow2, advance_pow2,
                                       baseclass, extvalclass, kdd>& rhs)
 {
-    return lhs != rhs;
+    return !operator==(lhs, rhs);
 }
 
 template <typename CharT, typename Traits,
