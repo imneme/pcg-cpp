@@ -611,6 +611,8 @@ public:
 //
 // to print out my_foo_type_t (or its concrete type if it is a synonym)
 
+#if __cpp_rtti || __GXX_RTTI
+
 template <typename T>
 struct printable_typename {};
 
@@ -630,6 +632,8 @@ std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
     out << implementation_typename;
     return out;
 }
+
+#endif  // __cpp_rtti || __GXX_RTTI
 
 } // namespace pcg_extras
 
