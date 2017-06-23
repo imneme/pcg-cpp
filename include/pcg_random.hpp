@@ -561,15 +561,17 @@ operator<<(std::basic_ostream<CharT,Traits>& out,
     auto space = out.widen(' ');
     auto orig_fill = out.fill();
 
-    out << rng.multiplier() << space
-        << rng.increment() << space
-        << rng.state_;
+    pcg_extras::Output(out, rng.multiplier());
+    out << space;
+    pcg_extras::Output(out, rng.increment());
+    out << space;
+    pcg_extras::Output(out, rng.state_);
+    out << space;
 
     out.flags(orig_flags);
     out.fill(orig_fill);
     return out;
 }
-
 
 template <typename CharT, typename Traits,
           typename xtype, typename itype,
@@ -584,8 +586,9 @@ operator>>(std::basic_istream<CharT,Traits>& in,
     auto orig_flags = in.flags(std::ios_base::dec | std::ios_base::skipws);
 
     itype multiplier, increment, state;
-    in >> multiplier >> increment >> state;
-
+    pcg_extras::Input(in, multiplier);
+    pcg_extras::Input(in, increment);
+    pcg_extras::Input(in, state);
     if (!in.fail()) {
         bool good = true;
         if (multiplier != rng.multiplier()) {
