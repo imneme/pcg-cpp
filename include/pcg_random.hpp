@@ -1361,10 +1361,10 @@ bool operator==(const extended<table_pow2, advance_pow2,
     auto& base_lhs = static_cast<const baseclass&>(lhs);
     auto& base_rhs = static_cast<const baseclass&>(rhs);
     return base_lhs == base_rhs
-        && !std::equal(
-                std::begin(lhs.data_), std::end(lhs.data_),
-                std::begin(rhs.data_)
-            );
+        && std::equal(
+               std::begin(lhs.data_), std::end(lhs.data_),
+               std::begin(rhs.data_)
+           );
 }
 
 template <bitcount_t table_pow2, bitcount_t advance_pow2,
