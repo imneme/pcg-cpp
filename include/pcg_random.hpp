@@ -88,6 +88,18 @@
 #include <new>
 #include <stdexcept>
 
+#ifdef _MSC_VER
+    #pragma warning(disable:4146)
+#endif
+
+#ifdef _MSC_VER
+    #define PCG_ALWAYS_INLINE _forceinline
+#elif __GNUC__
+    #define PCG_ALWAYS_INLINE __attribute__((always_inline))
+#else
+    #define PCG_ALWAYS_INLINE inline
+#endif
+
 /*
  * The pcg_extras namespace contains some support code that is likley to
  * be useful for a variety of RNGs, including:
@@ -1204,7 +1216,7 @@ public:
         return baseclass::period_pow2() + table_size*extvalclass::period_pow2();
     }
 
-    __attribute__((always_inline)) result_type operator()()
+    PCG_ALWAYS_INLINE result_type operator()()
     {
         result_type rhs = get_extended_value();
         result_type lhs = this->baseclass::operator()();
@@ -1751,5 +1763,9 @@ typedef pcg_engines::ext_oneseq_xsl_rr_128_64<10,128,false> pcg64_c1024_fast;
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<14,16,true>    pcg32_k16384;
 typedef pcg_engines::ext_oneseq_xsh_rs_64_32<14,32,true>    pcg32_k16384_fast;
+
+#ifdef _MSC_VER
+    #pragma warning(default:4146)
+#endif
 
 #endif // PCG_RAND_HPP_INCLUDED
