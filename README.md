@@ -29,7 +29,7 @@ self explanatory.
 The code is written in C++11, as an include-only library (i.e., there is
 nothing you need to build).  There are some provided demo programs and tests
 however.  On a Unix-style system (e.g., Linux, Mac OS X) you should be able
-to just type type
+to just type
 
     make
 
