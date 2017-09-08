@@ -93,7 +93,7 @@
 #endif
 
 #ifdef _MSC_VER
-    #define PCG_ALWAYS_INLINE _forceinline
+    #define PCG_ALWAYS_INLINE __forceinline
 #elif __GNUC__
     #define PCG_ALWAYS_INLINE __attribute__((always_inline))
 #else
