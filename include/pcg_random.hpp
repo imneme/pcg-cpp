@@ -1357,7 +1357,9 @@ void extended<table_pow2,advance_pow2,baseclass,extvalclass,kdd>::selfinit()
     //      - any strange correlations would only be apparent if we
     //        were to backstep the generator so that the base generator
     //        was generating the same values again
-    result_type xdiff = baseclass::operator()() - baseclass::operator()();
+    result_type lhs = baseclass::operator()();
+    result_type rhs = baseclass::operator()();
+    result_type xdiff = lhs - rhs;
     for (size_t i = 0; i < table_size; ++i) {
         data_[i] = baseclass::operator()() ^ xdiff;
     }
