@@ -12,7 +12,7 @@ Round 1:
 	 Td Kc 2d Ks Jh 4c 4d Tc
 
 Round 2:
-  20bit: 0x566843ac 0x905997f7 0x5b238391 0x66aed7fc 0xba6c7310 0x977fc9df
+  32bit: 0x566843ac 0x905997f7 0x5b238391 0x66aed7fc 0xba6c7310 0x977fc9df
   Coins: TTHTTTTHHTTHTHHTHTHTTTHHHHTHHHHTTHHHHTHTTTTTHHHHHHHTHHHTTHTTHTTHH
   Rolls: 3 6 5 6 3 3 3 5 2 2 3 2 6 2 1 5 5 4 4 3 3 3 1 3 4 5 1 4 5 6 4 4 1
   Cards: 2h As 2c Qh 7d 5s Jc 6s 7h Kh 9s 4h 3s 2d 6h Qc Kc 8c Ah Tc 4c 7c
@@ -20,7 +20,7 @@ Round 2:
 	 Js 4d Ac Td Qs Kd 3h 9d
 
 Round 3:
-  20bit: 0xddea7331 0x79f2e4e5 0x60cc53a2 0xa5c5ccc5 0x3e3053ad 0x1434a470
+  32bit: 0xddea7331 0x79f2e4e5 0x60cc53a2 0xa5c5ccc5 0x3e3053ad 0x1434a470
   Coins: TTTTTTTHHTHHHTHHTHHHTTTTHHTTHHHHTTTHTTTHTTHTHHHTHTHHTHTTHHTHTTTTT
   Rolls: 5 6 1 5 3 2 4 1 4 3 4 2 4 2 2 2 5 6 6 3 5 4 3 4 2 1 3 1 1 1 3 2 2
   Cards: 4s Kh 6c Qc 5s Jc 3d 2s 6h 7s Th 3s 5d Ts Ks 9c Jd 5c Qh Ah 8s Td
@@ -28,7 +28,7 @@ Round 3:
 	 Kd 8d Tc Js Kc 3h 4d 4c
 
 Round 4:
-  20bit: 0x37d70079 0x274cad70 0xbcab1ee3 0x423840d4 0xf1becf52 0x26cfcace
+  32bit: 0x37d70079 0x274cad70 0xbcab1ee3 0x423840d4 0xf1becf52 0x26cfcace
   Coins: HTHTHHTTHHTHHTHHTHTHHTTHTTTHTHHTHTTTHTTTHTHHTTTTTTTTHTHHHHTTHTHTT
   Rolls: 5 5 5 2 1 1 1 2 2 1 3 2 5 5 3 1 6 5 5 2 3 4 6 1 4 4 5 3 1 5 6 5 4
   Cards: Jh 8d 3s 5c 5d Ac 3c Kd 4s Jd Tc Qs Qd Js 8h 9h Th Kh Ts 7d Td 7h
@@ -36,7 +36,7 @@ Round 4:
 	 8c Ah 6h 5h 9s 8s As 2h
 
 Round 5:
-  20bit: 0x85d178c2 0xc263a20b 0x232a5ea9 0xaf7570ce 0x2e0b0f69 0x11823de5
+  32bit: 0x85d178c2 0xc263a20b 0x232a5ea9 0xaf7570ce 0x2e0b0f69 0x11823de5
   Coins: TTTHTHHHTTHTTHHHTHTTHHTTTHHTTHTTTHTTHHTTHTTTHTTHTTHHTHTHHHHTTTTTH
   Rolls: 1 5 2 1 4 3 3 6 1 5 6 1 5 5 4 4 1 6 2 3 6 1 3 5 5 3 2 2 5 3 6 4 4
   Cards: 3d 8c 2d 2s As 4s 4c Tc Kc 7c Jd 5s 3c 2h 7h 6c 8s 5c Ah 6h Jc 7d

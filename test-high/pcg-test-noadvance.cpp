@@ -116,7 +116,7 @@ int main(int argc, char** argv)
             cout << " 0x" << hex << setfill('0') 
                  << setw(sizeof(RNG::result_type)*2) << rng();
         }
-        cout << endl;
+        cout << dec << endl;
 
         /* Toss some coins */
         cout << "  Coins: ";
