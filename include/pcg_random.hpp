@@ -74,6 +74,7 @@
 #define PCG_RAND_HPP_INCLUDED 1
 
 #include <algorithm>
+#include <cstdint>
 #include <cinttypes>
 #include <cstddef>
 #include <cstdlib>
@@ -203,7 +204,7 @@ public:
     typedef itype state_type;
 
     constexpr itype increment() const {
-        return itype(reinterpret_cast<unsigned long>(this) | 1);
+        return itype(reinterpret_cast<std::uintptr_t>(this) | 1);
     }
 
     constexpr itype stream() const
