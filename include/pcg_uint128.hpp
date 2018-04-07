@@ -36,7 +36,6 @@
 #ifndef PCG_UINT128_HPP_INCLUDED
 #define PCG_UINT128_HPP_INCLUDED 1
 
-#include <cstdint>
 #include <cstdio>
 #include <cassert>
 #include <climits>
