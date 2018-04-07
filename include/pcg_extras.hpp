@@ -346,6 +346,31 @@ inline uint64_t rotr(uint64_t value, bitcount_t rot)
 }
 #endif // __x86_64__
 
+#elif defined(_MSC_VER)
+  // Use MSVC++ bit rotation intrinsics
+
+#pragma intrinsic(_rotr, _rotr64, _rotr8, _rotr16)
+
+inline uint8_t rotr(uint8_t value, bitcount_t rot)
+{
+    return _rotr8(value, rot);
+}
+
+inline uint16_t rotr(uint16_t value, bitcount_t rot)
+{
+    return _rotr16(value, rot);
+}
+
+inline uint32_t rotr(uint32_t value, bitcount_t rot)
+{
+    return _rotr(value, rot);
+}
+
+inline uint64_t rotr(uint64_t value, bitcount_t rot)
+{
+    return _rotr64(value, rot);
+}
+
 #endif // PCG_USE_INLINE_ASM
 
 
