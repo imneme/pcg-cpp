@@ -621,7 +621,7 @@ std::ostream& operator<<(std::ostream& out, printable_typename<T>) {
 #ifdef __GNUC__
     int status;
     char* pretty_name =
-        abi::__cxa_demangle(implementation_typename, NULL, NULL, &status);
+        abi::__cxa_demangle(implementation_typename, nullptr, nullptr, &status);
     if (status == 0)
         out << pretty_name;
     free(static_cast<void*>(pretty_name));
