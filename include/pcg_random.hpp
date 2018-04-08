@@ -203,7 +203,7 @@ public:
     typedef itype state_type;
 
     constexpr itype increment() const {
-        return itype(reinterpret_cast<unsigned long>(this) | 1);
+        return itype(reinterpret_cast<uintptr_t>(this) | 1);
     }
 
     constexpr itype stream() const
