@@ -44,6 +44,10 @@
 #include <initializer_list>
 #include <type_traits>
 
+#if defined(_MSC_VER)  // Use MSVC++ intrinsics
+#include <intrin.h>
+#endif
+
 /*
  * We want to lay the type out the same way that a native type would be laid
  * out, which means we must know the machine's endian, at compile time.
@@ -128,8 +132,6 @@ inline bitcount_t trailingzeros(uint64_t v)
 }
 
 #elif defined(_MSC_VER)  // Use MSVC++ intrinsics
-
-#include <intrin.h>
 
 #pragma intrinsic(_BitScanReverse, _BitScanForward)
 #if defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64)
