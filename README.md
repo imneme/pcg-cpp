@@ -27,19 +27,38 @@ self explanatory.
 ## Building
 
 The code is written in C++11, as an include-only library (i.e., there is
-nothing you need to build).  There are some provided demo programs and tests
-however.  On a Unix-style system (e.g., Linux, Mac OS X) you should be able
-to just type
+nothing you need to build).
 
-    make
+There are some provided demo programs and tests however. We also provide a
+[cmake](https://cmake.org/)-based building and testing functionality. If you
+do not have `cmake` installed on your system, you can
+[download](https://cmake.org/download/) the latest version. Once installed, you
+can run
 
-To build the demo programs.
+```bash
+mkdir build
+cd build
+cmake ../
+cmake --build .
+cmake --build . --target test
+cmake --build . --target install
+```
 
-## Testing
+Above, `cmake` creates necessary files inside the `build` folder, builds the
+demo programs (`BUILD_SAMPLES=ON`), creates tests (`TEST_PCG=ON`), and finally
+installs the header files to the `include` folder in the default system path.
 
-Run
+You can append `-DVARIABLE=VALUE` to `cmake` to change the default behaviour.
+For instance, if you are only interested in installing the header files to the
+`install` folder inside the current path, simply run
 
-    make test
+```bash
+mkdir build install
+cd build
+cmake -DBUILD_SAMPLES=OFF -DTEST_PCG=OFF -DCMAKE_INSTALL_PREFIX=../install ../
+cmake --build .
+cmake --build . --target install
+```
 
 ## Directory Structure
 
@@ -48,5 +67,5 @@ The directories are arranged as follows:
 * `include` -- contains `pcg_random.hpp` and supporting include files
 * `test-high` -- test code for the high-level API where the functions have
   shorter, less scary-looking names.
-* `sample` -- sample code, some similar to the code in `test-high` but more 
+* `sample` -- sample code, some similar to the code in `test-high` but more
   human readable, some other examples too
