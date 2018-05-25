@@ -658,7 +658,8 @@ itype engine<xtype,itype,output_mixin,output_previous,stream_mixin,
     itype cur_state, itype newstate, itype cur_mult, itype cur_plus, itype mask)
 {
     constexpr itype ONE  = 1u;  // itype could be weird, so use constant
-    itype the_bit = stream_mixin::is_mcg ? itype(4u) : itype(1u);
+    bool is_mcg = cur_plus == itype(0);
+    itype the_bit = is_mcg ? itype(4u) : itype(1u);
     itype distance = 0u;
     while ((cur_state & mask) != (newstate & mask)) {
        if ((cur_state & the_bit) != (newstate & the_bit)) {
@@ -670,7 +671,7 @@ itype engine<xtype,itype,output_mixin,output_previous,stream_mixin,
        cur_plus = (cur_mult+ONE)*cur_plus;
        cur_mult *= cur_mult;
     }
-    return stream_mixin::is_mcg ? distance >> 2 : distance;
+    return is_mcg ? distance >> 2 : distance;
 }
 
 template <typename xtype, typename itype,
@@ -688,7 +689,17 @@ itype operator-(const engine<xtype,itype,
         std::is_same<stream_mixin_lhs, stream_mixin_rhs>::value &&
             std::is_same<multiplier_mixin_lhs, multiplier_mixin_rhs>::value,
         "Incomparable generators");
-    return rhs.distance(lhs.state_);
+    if (lhs.increment() == rhs.increment()) {
+       return rhs.distance(lhs.state_);
+    } else  {
+       constexpr itype ONE = 1u;
+       itype lhs_diff = lhs.increment() + (lhs.multiplier()-ONE) * lhs.state_;
+       itype rhs_diff = rhs.increment() + (rhs.multiplier()-ONE) * rhs.state_;
+       if ((lhs_diff & itype(3u)) != (rhs_diff & itype(3u))) {
+           rhs_diff = -rhs_diff;
+       }
+       return rhs.distance(rhs_diff, lhs_diff, rhs.multiplier(), itype(0u));
+    }
 }
 
 
