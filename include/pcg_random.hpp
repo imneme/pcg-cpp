@@ -569,6 +569,8 @@ operator<<(std::basic_ostream<CharT,Traits>& out,
                           output_mixin,output_previous,
                           stream_mixin, multiplier_mixin>& rng)
 {
+    using pcg_extras::operator<<;
+
     auto orig_flags = out.flags(std::ios_base::dec | std::ios_base::left);
     auto space = out.widen(' ');
     auto orig_fill = out.fill();
@@ -593,6 +595,8 @@ operator>>(std::basic_istream<CharT,Traits>& in,
                     output_mixin,output_previous,
                     stream_mixin, multiplier_mixin>& rng)
 {
+    using pcg_extras::operator>>;
+
     auto orig_flags = in.flags(std::ios_base::dec | std::ios_base::skipws);
 
     itype multiplier, increment, state;
