@@ -23,10 +23,11 @@ all:
 	cd test-high; $(MAKE)
 	cd sample; $(MAKE)
 
-PREFIX = /usr/local
+PREFIX ?= /usr/local
 
 install: all
-	install -m 0644 include/*.hpp $PREFIX/include
+	install -d $(DESTDIR)$(PREFIX)/include
+	install -m 0644 include/*.hpp $(DESTDIR)$(PREFIX)/include
 
 test:   all
 	cd test-high; $(MAKE) test
