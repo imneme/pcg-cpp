@@ -94,10 +94,18 @@
 
 #ifdef _MSC_VER
     #define PCG_ALWAYS_INLINE __forceinline
+    #if defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 190024210
+        // available since VS 2015 Update 2/3
+        #define PCG_EBO __declspec(empty_bases)
+    #else
+        #define PCG_EBO
+    #endif
 #elif __GNUC__
     #define PCG_ALWAYS_INLINE __attribute__((always_inline))
+    #define PCG_EBO
 #else
     #define PCG_ALWAYS_INLINE inline
+    #define PCG_EBO
 #endif
 
 /*
@@ -375,7 +383,7 @@ template <typename xtype, typename itype,
           bool output_previous = true,
           typename stream_mixin = oneseq_stream<itype>,
           typename multiplier_mixin = default_multiplier<itype> >
-class engine : protected output_mixin,
+class PCG_EBO engine : protected output_mixin,
                public stream_mixin,
                protected multiplier_mixin {
 protected:
@@ -1187,7 +1195,7 @@ struct xsl_mixin {
 
 
 template <typename baseclass>
-struct inside_out : private baseclass {
+struct PCG_EBO inside_out : private baseclass {
     inside_out() = delete;
 
     typedef typename baseclass::result_type result_type;
@@ -1229,7 +1237,7 @@ struct inside_out : private baseclass {
 
 
 template <bitcount_t table_pow2, bitcount_t advance_pow2, typename baseclass, typename extvalclass, bool kdd = true>
-class extended : public baseclass {
+class PCG_EBO extended : public baseclass {
 public:
     typedef typename baseclass::state_type  state_type;
     typedef typename baseclass::result_type result_type;
