@@ -22,7 +22,7 @@
 /*
  * This program outputs 215 GB of random bits (binary data).  This is
  * about the same as the total output of random.org in its 15 year history.
- * The code uses 1.25e-8 of the period, and chooses an arbitrary stream from 
+ * The code uses 1.25e-8 of the period, and chooses an arbitrary stream from
  * 2^64 streams.
  *
  * Typical usage:
@@ -35,7 +35,12 @@
 #include <iostream>
 #include <random>
 
-#include <unistd.h>             // We use POSIX read/write for binary I/O
+// We use POSIX read/write for binary I/O
+#if defined(__unix__) || defined (__CYGWIN__) || defined (__APPLE__)
+  #include <unistd.h>
+#else
+  #include <io.h>
+#endif
 
 #include "pcg_random.hpp"
 
@@ -43,11 +48,11 @@ int main()
 {
     pcg32_fast rng(pcg_extras::seed_seq_from<std::random_device>{});
     std::clog << rng << "\n\n";
-    
+
     constexpr size_t BUFFER_SIZE = 1024ull * 128ull;
     uint32_t buffer[BUFFER_SIZE];
     constexpr size_t ROUNDS      = 215 * 1073741824ull / sizeof(buffer);
-    
+
     for (size_t i = 0; i < ROUNDS; ++i) {
         for (auto& v : buffer)
             v = rng();
@@ -55,6 +60,3 @@ int main()
     }
     return 0;
 }
-
-    
-    

@@ -5,25 +5,30 @@ matrix:
     - name: "Linux (gcc)"
       os: linux
       compiler: gcc
+      script:
+        - cmake --build . --target test
 
     - name: "Linux (clang)"
       os: linux
       compiler: clang
+      script:
+        - cmake --build . --target test
 
     - name: "OSX"
       os: osx
+      script:
+        - cmake --build . --target test
 
     - name: "Windows"
       os: windows
+      script:
+        - cmake --build . --target RUN_TESTS
 
 before_script:
   - mkdir build
   - cd build
-
-script:
   - cmake ..
   - cmake --build .
-  - cmake --build . --target test
 
 notifications:
   email: false
