@@ -24,6 +24,10 @@ matrix:
       script:
         - cmake --build . --target RUN_TESTS
 
+  allow_failures:
+    - os: windows
+  fast_finish: true
+
 before_script:
   - mkdir build
   - cd build
