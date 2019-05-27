@@ -323,6 +323,11 @@ public:
         return d.v01;
     }
 
+    explicit constexpr operator int64_t() const
+    {
+        return d.v01;
+    }
+
     explicit constexpr operator uint32_t() const
     {
         return w.v0;
