@@ -24,14 +24,14 @@ Visit [PCG-Random website] for information on how to use this library, or look
 at the sample code in the `sample` directory -- hopefully it should be fairly
 self explanatory.
 
-## Building
+## Building, Testing and Installing
 
 The code is written in C++11, as an include-only library (i.e., there is
 nothing you need to build).
 
-There are some provided demo programs and tests however. We also provide a
-[cmake](https://cmake.org/)-based building and testing functionality. If you
-do not have `cmake` installed on your system, you can
+There are some provided demo programs and tests however. We provide a
+[CMake](https://cmake.org/)-based building and testing functionality. If you
+do not have CMake installed on your system, you can
 [download](https://cmake.org/download/) the latest version. Once installed, you
 can run
 
@@ -44,18 +44,17 @@ cmake --build . --target test
 cmake --build . --target install
 ```
 
-Above, `cmake` creates necessary files inside the `build` folder, builds the
-demo programs (`BUILD_SAMPLES=ON`), creates tests (`TEST_PCG=ON`), and finally
-installs the header files to the `include` folder in the default system path.
-
-You can append `-DVARIABLE=VALUE` to `cmake` to change the default behaviour.
-For instance, if you are only interested in installing the header files to the
-`install` folder inside the current path, simply run
+Above, CMake creates necessary files inside the `build` folder, builds the demo
+programs, performs the tests, and finally installs the header files and demo
+programs to the `include` and `bin` folders, respectively, in the default system
+path. You can append `-D CMAKE_INSTALL_PREFIX=<folder_name>` to change the
+default (system) path. For instance, if you would like to install the files in
+the `install` folder under the current path, simply run
 
 ```bash
 mkdir build install
 cd build
-cmake -DBUILD_SAMPLES=OFF -DTEST_PCG=OFF -DCMAKE_INSTALL_PREFIX=../install ../
+cmake -D CMAKE_INSTALL_PREFIX=../install ../
 cmake --build .
 cmake --build . --target install
 ```
@@ -64,7 +63,7 @@ cmake --build . --target install
 
 The directories are arranged as follows:
 
-* `include` -- contains `pcg_random.hpp` and supporting include files
+* `src/include` -- contains `pcg_random.hpp` and supporting include files
 * `test-high` -- test code for the high-level API where the functions have
   shorter, less scary-looking names.
 * `sample` -- sample code, some similar to the code in `test-high` but more
