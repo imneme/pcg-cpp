@@ -1,7 +1,7 @@
 /*
  * PCG Random Number Generation for C++
  *
- * Copyright 2014-2017 Melissa O'Neill <oneill@pcg-random.org>,
+ * Copyright 2014-2019 Melissa O'Neill <oneill@pcg-random.org>,
  *                     and the PCG Project contributors.
  *
  * SPDX-License-Identifier: (Apache-2.0 OR MIT)
