@@ -1,5 +1,11 @@
 # PCG Random Number Generation, C++ Edition
 
+[![Build Status][unix-img]][unix-link] ![License][license-img]
+
+[unix-img]: https://img.shields.io/travis/com/imneme/pcg-cpp/master.svg
+[unix-link]: https://travis-ci.com/imneme/pcg-cpp
+[license-img]: https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg
+
 [PCG-Random website]: http://www.pcg-random.org
 
 This code provides an implementation of the PCG family of random number
