@@ -1,17 +1,30 @@
+cmake_minimum_required(VERSION 3.8.0)
+
+project(pcg-tests)
+
+if (NOT TARGET pcg::pcg)
+  find_package(pcg CONFIG REQUIRED)
+endif()
+
+enable_testing()
+
 function(define_test source rng two_arg_init)
   add_executable(${rng} ${source})
   if(${ARGC} EQUAL 3)
-    target_compile_definitions(
-      ${rng}
-      PRIVATE RNG=${rng} TWO_ARG_INIT=${two_arg_init}
+    target_compile_definitions(${rng}
+      PRIVATE
+        RNG=${rng}
+        TWO_ARG_INIT=${two_arg_init}
     )
   elseif(${ARGC} EQUAL 4)
-    target_compile_definitions(
-      ${rng}
-      PRIVATE RNG=${rng} TWO_ARG_INIT=${two_arg_init} AWKWARD_128BIT_CODE=${ARGV3}
+    target_compile_definitions(${rng}
+      PRIVATE
+        RNG=${rng}
+        TWO_ARG_INIT=${two_arg_init}
+        AWKWARD_128BIT_CODE=${ARGV3}
     )
   endif()
-  target_link_libraries(${rng} PRIVATE headers)
+  target_link_libraries(${rng} PRIVATE pcg::pcg)
 
   add_test(
     NAME check-${rng}
@@ -79,6 +92,9 @@ endforeach()
 
 # pcg32_unique and pcg64_unique are failing in the old run-tests.sh (/dev/null'ed)
 set_property(
-  TEST check-pcg32_unique check-pcg64_unique
-  PROPERTY WILL_FAIL TRUE
+  TEST
+    check-pcg32_unique
+    check-pcg64_unique
+  PROPERTY
+    WILL_FAIL TRUE
 )
