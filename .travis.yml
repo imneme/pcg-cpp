@@ -1,0 +1,29 @@
+language: cpp
+
+matrix:
+  include:
+    - name: "Linux (gcc)"
+      os: linux
+      compiler: gcc
+
+    - name: "Linux (clang)"
+      os: linux
+      compiler: clang
+
+    - name: "OSX"
+      os: osx
+
+    - name: "Windows"
+      os: windows
+
+before_script:
+  - mkdir build
+  - cd build
+
+script:
+  - cmake ..
+  - cmake --build .
+  - cmake --build . --target test
+
+notifications:
+  email: false
