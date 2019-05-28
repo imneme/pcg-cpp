@@ -39,7 +39,7 @@ install(
 
 install(
   DIRECTORY
-    include/
+    ${pcg_SOURCE_DIR}/
   DESTINATION
     include
   FILES_MATCHING PATTERN "*.hpp"
