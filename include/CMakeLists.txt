@@ -9,7 +9,7 @@ target_compile_features(pcg INTERFACE cxx_std_11)
 
 target_include_directories(pcg
   INTERFACE
-    $<BUILD_INTERFACE:${pcg_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${pcg_SOURCE_DIR}>
     $<INSTALL_INTERFACE:include>
 )
 
@@ -42,4 +42,5 @@ install(
     include/
   DESTINATION
     include
+  FILES_MATCHING PATTERN "*.hpp"
 )

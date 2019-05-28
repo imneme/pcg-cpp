@@ -69,7 +69,7 @@ cmake --build . --target install
 
 The directories are arranged as follows:
 
-* `src/include` -- contains `pcg_random.hpp` and supporting include files
+* `include` -- contains `pcg_random.hpp` and supporting include files
 * `test-high` -- test code for the high-level API where the functions have
   shorter, less scary-looking names.
 * `sample` -- sample code, some similar to the code in `test-high` but more
