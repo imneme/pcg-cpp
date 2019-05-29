@@ -7,32 +7,32 @@ if (NOT TARGET pcg::pcg)
 endif()
 
 
-add_executable(codebook codebook.cpp)
-target_link_libraries(codebook PRIVATE pcg::pcg)
+add_executable(pcg-codebook codebook.cpp)
+target_link_libraries(pcg-codebook PRIVATE pcg::pcg)
 
-add_executable(cppref-sample cppref-sample.cpp)
-target_link_libraries(cppref-sample PRIVATE pcg::pcg)
+add_executable(pcg-cppref-sample cppref-sample.cpp)
+target_link_libraries(pcg-cppref-sample PRIVATE pcg::pcg)
 
-add_executable(make-partytrick make-partytrick.cpp)
-target_link_libraries(make-partytrick PRIVATE pcg::pcg)
+add_executable(pcg-make-partytrick make-partytrick.cpp)
+target_link_libraries(pcg-make-partytrick PRIVATE pcg::pcg)
 
 add_executable(pcg-demo pcg-demo.cpp)
 target_link_libraries(pcg-demo PRIVATE pcg::pcg)
 
-add_executable(spew spew.cpp)
-target_link_libraries(spew PRIVATE pcg::pcg)
+add_executable(pcg-spew spew.cpp)
+target_link_libraries(pcg-spew PRIVATE pcg::pcg)
 
-add_executable(use-partytrick use-partytrick.cpp)
-target_link_libraries(use-partytrick PRIVATE pcg::pcg)
+add_executable(pcg-use-partytrick use-partytrick.cpp)
+target_link_libraries(pcg-use-partytrick PRIVATE pcg::pcg)
 
 install(
   TARGETS
-    codebook
-    cppref-sample
-    make-partytrick
+    pcg-codebook
+    pcg-cppref-sample
+    pcg-make-partytrick
     pcg-demo
-    spew
-    use-partytrick
+    pcg-spew
+    pcg-use-partytrick
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
