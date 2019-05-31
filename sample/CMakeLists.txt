@@ -2,10 +2,11 @@ cmake_minimum_required(VERSION 3.8.0)
 
 project(pcg-samples)
 
+include(GNUInstallDirs)
+
 if (NOT TARGET pcg::pcg)
   find_package(pcg CONFIG REQUIRED)
 endif()
-
 
 add_executable(pcg-codebook codebook.cpp)
 target_link_libraries(pcg-codebook PRIVATE pcg::pcg)
@@ -33,7 +34,9 @@ install(
     pcg-demo
     pcg-spew
     pcg-use-partytrick
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+include(CPack)

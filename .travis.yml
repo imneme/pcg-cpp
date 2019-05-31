@@ -5,34 +5,50 @@ matrix:
     - name: "Linux (gcc)"
       os: linux
       compiler: gcc
+      addons:
+        apt:
+          packages: valgrind
       script:
-        - cmake --build . --target test
+        - ctest --verbose --output-on-failure --script cmake/ctest-gcc.cmake
+      before_deploy:
+        - mkdir build
+        - cd build
+        - cmake -D CMAKE_BUILD_TYPE=Release ..
+        - cd ..
+        - cpack -G ZIP --config cmake/cpack-linux.cmake
+      deploy:
+        provider: releases
+        api_key: ${GITHUB_TOKEN}
+        file_glob: true
+        file: "*.zip"
+        skip_cleanup: true
+        on:
+          tags: true
 
     - name: "Linux (clang)"
       os: linux
       compiler: clang
       script:
-        - cmake --build . --target test
+        - ctest --verbose --output-on-failure --script cmake/ctest-clang.cmake
 
     - name: "OSX"
       os: osx
       script:
-        - cmake --build . --target test
+        - ctest --verbose --output-on-failure --script cmake/ctest-osx.cmake
 
     - name: "Windows"
       os: windows
+      before_script:
+        - mkdir build
+        - cd build
+        - cmake ..
+        - cmake --build .
       script:
         - cmake --build . --target RUN_TESTS
 
   allow_failures:
     - os: windows
   fast_finish: true
-
-before_script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - cmake --build .
 
 notifications:
   email: false
