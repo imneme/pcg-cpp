@@ -1011,6 +1011,45 @@ struct rxs_m_mixin {
     }
 };
 
+
+/*
+ * DXSM -- double xorshift multiply
+ *
+ * This is a new, more powerful output permutation (added in 2019).  It's
+ * a more comprehensive scrambling than RXS M, but runs faster on 128-bit
+ * types.  Although primarily intended for use at large sizes, also works
+ * at smaller sizes as well.
+ *
+ * This permutation is similar to xorshift multiply hash functions, except
+ * that one of the multipliers is the LCG multiplier (to avoid needing to
+ * have a second constant) and the other is based on the low-order bits.
+ * This latter aspect means that the scrambling applied to the high bits
+ * depends on the low bits, and makes it (to my eye) impractical to back
+ * out the permutation without having the low-order bits.
+ */
+
+template <typename xtype, typename itype>
+struct dxsm_mixin {
+    inline xtype output(itype internal)
+    {
+        constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
+        constexpr bitcount_t itypebits = bitcount_t(sizeof(itype) * 8);
+        static_assert(xtypebits <= itypebits/2,
+                      "Output type must be half the size of the state type.");
+        
+        xtype hi = internal >> (itypebits - xtypebits);
+        xtype lo = internal;
+
+        lo |= 1;
+        hi ^= hi >> (xtypebits/2);
+	hi *= xtype(cheap_multiplier<itype>::multiplier());
+	hi ^= hi >> (3*(xtypebits/4));
+	hi *= lo;
+	return hi;
+    }
+};
+
+
 /*
  * XSL RR -- fixed xorshift (to low bits), random rotate
  *
@@ -1688,6 +1727,36 @@ typedef mcg_base<uint32_t, uint64_t, rxs_m_mixin>  mcg_rxs_m_64_32;
 typedef mcg_base<uint64_t, pcg128_t, rxs_m_mixin>  mcg_rxs_m_128_64;
 typedef mcg_base<uint64_t, pcg128_t, rxs_m_mixin, true, cheap_multiplier>
                                                    cm_mcg_rxs_m_128_64;
+
+/* Predefined types for DXSM */
+
+typedef oneseq_base<uint8_t,  uint16_t, dxsm_mixin>  oneseq_dxsm_16_8;
+typedef oneseq_base<uint16_t, uint32_t, dxsm_mixin>  oneseq_dxsm_32_16;
+typedef oneseq_base<uint32_t, uint64_t, dxsm_mixin>  oneseq_dxsm_64_32;
+typedef oneseq_base<uint64_t, pcg128_t, dxsm_mixin>  oneseq_dxsm_128_64;
+typedef oneseq_base<uint64_t, pcg128_t, dxsm_mixin, true, cheap_multiplier>
+                                                     cm_oneseq_dxsm_128_64;
+
+typedef unique_base<uint8_t,  uint16_t, dxsm_mixin>  unique_dxsm_16_8;
+typedef unique_base<uint16_t, uint32_t, dxsm_mixin>  unique_dxsm_32_16;
+typedef unique_base<uint32_t, uint64_t, dxsm_mixin>  unique_dxsm_64_32;
+typedef unique_base<uint64_t, pcg128_t, dxsm_mixin>  unique_dxsm_128_64;
+typedef unique_base<uint64_t, pcg128_t, dxsm_mixin, true, cheap_multiplier>
+                                                     cm_unique_dxsm_128_64;
+
+typedef setseq_base<uint8_t,  uint16_t, dxsm_mixin>  setseq_dxsm_16_8;
+typedef setseq_base<uint16_t, uint32_t, dxsm_mixin>  setseq_dxsm_32_16;
+typedef setseq_base<uint32_t, uint64_t, dxsm_mixin>  setseq_dxsm_64_32;
+typedef setseq_base<uint64_t, pcg128_t, dxsm_mixin>  setseq_dxsm_128_64;
+typedef setseq_base<uint64_t, pcg128_t, dxsm_mixin, true, cheap_multiplier>
+                                                     cm_setseq_dxsm_128_64;
+
+typedef mcg_base<uint8_t,  uint16_t, dxsm_mixin>  mcg_dxsm_16_8;
+typedef mcg_base<uint16_t, uint32_t, dxsm_mixin>  mcg_dxsm_32_16;
+typedef mcg_base<uint32_t, uint64_t, dxsm_mixin>  mcg_dxsm_64_32;
+typedef mcg_base<uint64_t, pcg128_t, dxsm_mixin>  mcg_dxsm_128_64;
+typedef mcg_base<uint64_t, pcg128_t, dxsm_mixin, true, cheap_multiplier>
+                                                  cm_mcg_dxsm_128_64;
 
 /* Predefined types for XSL RR (only defined for "large" types) */
 
