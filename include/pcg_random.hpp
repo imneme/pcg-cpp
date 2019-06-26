@@ -163,6 +163,20 @@ PCG_DEFINE_CONSTANT(pcg128_t, default, multiplier,
 PCG_DEFINE_CONSTANT(pcg128_t, default, increment,
         PCG_128BIT_CONSTANT(6364136223846793005ULL,1442695040888963407ULL))
 
+/* Alternative (cheaper) multipliers for 128-bit */
+
+template <typename T>
+struct cheap_multiplier : public default_multiplier<T> {
+    // For most types just use the default.
+};
+
+template <>
+struct cheap_multiplier<pcg128_t> {
+    static constexpr uint64_t multiplier() {
+        return 0xda942042e4dd58b5ULL;
+    }
+};
+
 
 /*
  * Each PCG generator is available in four variants, based on how it applies
@@ -740,31 +754,39 @@ inline bool operator!=(const engine<xtype,itype,
 
 template <typename xtype, typename itype,
          template<typename XT,typename IT> class output_mixin,
-         bool output_previous = (sizeof(itype) <= 8)>
+         bool output_previous = (sizeof(itype) <= 8),
+         template<typename IT> class multiplier_mixin = default_multiplier>
 using oneseq_base  = engine<xtype, itype,
                         output_mixin<xtype, itype>, output_previous,
-                        oneseq_stream<itype> >;
+                        oneseq_stream<itype>,
+                        multiplier_mixin<itype> >;
 
 template <typename xtype, typename itype,
          template<typename XT,typename IT> class output_mixin,
-         bool output_previous = (sizeof(itype) <= 8)>
+         bool output_previous = (sizeof(itype) <= 8),
+         template<typename IT> class multiplier_mixin = default_multiplier>
 using unique_base = engine<xtype, itype,
                          output_mixin<xtype, itype>, output_previous,
-                         unique_stream<itype> >;
+                         unique_stream<itype>,
+                         multiplier_mixin<itype> >;
 
 template <typename xtype, typename itype,
          template<typename XT,typename IT> class output_mixin,
-         bool output_previous = (sizeof(itype) <= 8)>
+         bool output_previous = (sizeof(itype) <= 8),
+         template<typename IT> class multiplier_mixin = default_multiplier>
 using setseq_base = engine<xtype, itype,
                          output_mixin<xtype, itype>, output_previous,
-                         specific_stream<itype> >;
+                         specific_stream<itype>,
+                         multiplier_mixin<itype> >;
 
 template <typename xtype, typename itype,
          template<typename XT,typename IT> class output_mixin,
-         bool output_previous = (sizeof(itype) <= 8)>
+         bool output_previous = (sizeof(itype) <= 8),
+         template<typename IT> class multiplier_mixin = default_multiplier>
 using mcg_base = engine<xtype, itype,
                       output_mixin<xtype, itype>, output_previous,
-                      no_stream<itype> >;
+                      no_stream<itype>,
+                      multiplier_mixin<itype> >;
 
 /*
  * OUTPUT FUNCTIONS.
@@ -1552,21 +1574,29 @@ typedef oneseq_base<uint8_t,  uint16_t, xsh_rs_mixin>  oneseq_xsh_rs_16_8;
 typedef oneseq_base<uint16_t, uint32_t, xsh_rs_mixin>  oneseq_xsh_rs_32_16;
 typedef oneseq_base<uint32_t, uint64_t, xsh_rs_mixin>  oneseq_xsh_rs_64_32;
 typedef oneseq_base<uint64_t, pcg128_t, xsh_rs_mixin>  oneseq_xsh_rs_128_64;
+typedef oneseq_base<uint64_t, pcg128_t, xsh_rs_mixin, true, cheap_multiplier>
+                                                       cm_oneseq_xsh_rs_128_64;
 
 typedef unique_base<uint8_t,  uint16_t, xsh_rs_mixin>  unique_xsh_rs_16_8;
 typedef unique_base<uint16_t, uint32_t, xsh_rs_mixin>  unique_xsh_rs_32_16;
 typedef unique_base<uint32_t, uint64_t, xsh_rs_mixin>  unique_xsh_rs_64_32;
 typedef unique_base<uint64_t, pcg128_t, xsh_rs_mixin>  unique_xsh_rs_128_64;
+typedef unique_base<uint64_t, pcg128_t, xsh_rs_mixin, true, cheap_multiplier>
+                                                       cm_unique_xsh_rs_128_64;
 
 typedef setseq_base<uint8_t,  uint16_t, xsh_rs_mixin>  setseq_xsh_rs_16_8;
 typedef setseq_base<uint16_t, uint32_t, xsh_rs_mixin>  setseq_xsh_rs_32_16;
 typedef setseq_base<uint32_t, uint64_t, xsh_rs_mixin>  setseq_xsh_rs_64_32;
 typedef setseq_base<uint64_t, pcg128_t, xsh_rs_mixin>  setseq_xsh_rs_128_64;
+typedef setseq_base<uint64_t, pcg128_t, xsh_rs_mixin, true, cheap_multiplier>
+                                                       cm_setseq_xsh_rs_128_64;
 
 typedef mcg_base<uint8_t,  uint16_t, xsh_rs_mixin>  mcg_xsh_rs_16_8;
 typedef mcg_base<uint16_t, uint32_t, xsh_rs_mixin>  mcg_xsh_rs_32_16;
 typedef mcg_base<uint32_t, uint64_t, xsh_rs_mixin>  mcg_xsh_rs_64_32;
 typedef mcg_base<uint64_t, pcg128_t, xsh_rs_mixin>  mcg_xsh_rs_128_64;
+typedef mcg_base<uint64_t, pcg128_t, xsh_rs_mixin, true, cheap_multiplier>
+                                                    cm_mcg_xsh_rs_128_64;
 
 /* Predefined types for XSH RR */
 
@@ -1574,21 +1604,29 @@ typedef oneseq_base<uint8_t,  uint16_t, xsh_rr_mixin>  oneseq_xsh_rr_16_8;
 typedef oneseq_base<uint16_t, uint32_t, xsh_rr_mixin>  oneseq_xsh_rr_32_16;
 typedef oneseq_base<uint32_t, uint64_t, xsh_rr_mixin>  oneseq_xsh_rr_64_32;
 typedef oneseq_base<uint64_t, pcg128_t, xsh_rr_mixin>  oneseq_xsh_rr_128_64;
+typedef oneseq_base<uint64_t, pcg128_t, xsh_rr_mixin, true, cheap_multiplier>
+                                                       cm_oneseq_xsh_rr_128_64;
 
 typedef unique_base<uint8_t,  uint16_t, xsh_rr_mixin>  unique_xsh_rr_16_8;
 typedef unique_base<uint16_t, uint32_t, xsh_rr_mixin>  unique_xsh_rr_32_16;
 typedef unique_base<uint32_t, uint64_t, xsh_rr_mixin>  unique_xsh_rr_64_32;
 typedef unique_base<uint64_t, pcg128_t, xsh_rr_mixin>  unique_xsh_rr_128_64;
+typedef unique_base<uint64_t, pcg128_t, xsh_rr_mixin, true, cheap_multiplier>
+                                                       cm_unique_xsh_rr_128_64;
 
 typedef setseq_base<uint8_t,  uint16_t, xsh_rr_mixin>  setseq_xsh_rr_16_8;
 typedef setseq_base<uint16_t, uint32_t, xsh_rr_mixin>  setseq_xsh_rr_32_16;
 typedef setseq_base<uint32_t, uint64_t, xsh_rr_mixin>  setseq_xsh_rr_64_32;
 typedef setseq_base<uint64_t, pcg128_t, xsh_rr_mixin>  setseq_xsh_rr_128_64;
+typedef setseq_base<uint64_t, pcg128_t, xsh_rr_mixin, true, cheap_multiplier>
+                                                       cm_setseq_xsh_rr_128_64;
 
 typedef mcg_base<uint8_t,  uint16_t, xsh_rr_mixin>  mcg_xsh_rr_16_8;
 typedef mcg_base<uint16_t, uint32_t, xsh_rr_mixin>  mcg_xsh_rr_32_16;
 typedef mcg_base<uint32_t, uint64_t, xsh_rr_mixin>  mcg_xsh_rr_64_32;
 typedef mcg_base<uint64_t, pcg128_t, xsh_rr_mixin>  mcg_xsh_rr_128_64;
+typedef mcg_base<uint64_t, pcg128_t, xsh_rr_mixin, true, cheap_multiplier>
+                                                    cm_mcg_xsh_rr_128_64;
 
 
 /* Predefined types for RXS M XS */
@@ -1597,19 +1635,26 @@ typedef oneseq_base<uint8_t,  uint8_t, rxs_m_xs_mixin>   oneseq_rxs_m_xs_8_8;
 typedef oneseq_base<uint16_t, uint16_t, rxs_m_xs_mixin>  oneseq_rxs_m_xs_16_16;
 typedef oneseq_base<uint32_t, uint32_t, rxs_m_xs_mixin>  oneseq_rxs_m_xs_32_32;
 typedef oneseq_base<uint64_t, uint64_t, rxs_m_xs_mixin>  oneseq_rxs_m_xs_64_64;
-typedef oneseq_base<pcg128_t, pcg128_t, rxs_m_xs_mixin>  oneseq_rxs_m_xs_128_128;
+typedef oneseq_base<pcg128_t, pcg128_t, rxs_m_xs_mixin>
+                                                        oneseq_rxs_m_xs_128_128;
+typedef oneseq_base<pcg128_t, pcg128_t, rxs_m_xs_mixin, true, cheap_multiplier>
+                                                     cm_oneseq_rxs_m_xs_128_128;
 
 typedef unique_base<uint8_t,  uint8_t, rxs_m_xs_mixin>  unique_rxs_m_xs_8_8;
 typedef unique_base<uint16_t, uint16_t, rxs_m_xs_mixin> unique_rxs_m_xs_16_16;
 typedef unique_base<uint32_t, uint32_t, rxs_m_xs_mixin> unique_rxs_m_xs_32_32;
 typedef unique_base<uint64_t, uint64_t, rxs_m_xs_mixin> unique_rxs_m_xs_64_64;
 typedef unique_base<pcg128_t, pcg128_t, rxs_m_xs_mixin> unique_rxs_m_xs_128_128;
+typedef unique_base<pcg128_t, pcg128_t, rxs_m_xs_mixin, true, cheap_multiplier>
+                                                     cm_unique_rxs_m_xs_128_128;
 
 typedef setseq_base<uint8_t,  uint8_t, rxs_m_xs_mixin>  setseq_rxs_m_xs_8_8;
 typedef setseq_base<uint16_t, uint16_t, rxs_m_xs_mixin> setseq_rxs_m_xs_16_16;
 typedef setseq_base<uint32_t, uint32_t, rxs_m_xs_mixin> setseq_rxs_m_xs_32_32;
 typedef setseq_base<uint64_t, uint64_t, rxs_m_xs_mixin> setseq_rxs_m_xs_64_64;
 typedef setseq_base<pcg128_t, pcg128_t, rxs_m_xs_mixin> setseq_rxs_m_xs_128_128;
+typedef setseq_base<pcg128_t, pcg128_t, rxs_m_xs_mixin, true, cheap_multiplier>
+                                                     cm_setseq_rxs_m_xs_128_128;
 
                 // MCG versions don't make sense here, so aren't defined.
 
@@ -1619,35 +1664,51 @@ typedef oneseq_base<uint8_t,  uint16_t, rxs_m_mixin>  oneseq_rxs_m_16_8;
 typedef oneseq_base<uint16_t, uint32_t, rxs_m_mixin>  oneseq_rxs_m_32_16;
 typedef oneseq_base<uint32_t, uint64_t, rxs_m_mixin>  oneseq_rxs_m_64_32;
 typedef oneseq_base<uint64_t, pcg128_t, rxs_m_mixin>  oneseq_rxs_m_128_64;
+typedef oneseq_base<uint64_t, pcg128_t, rxs_m_mixin, true, cheap_multiplier>
+                                                      cm_oneseq_rxs_m_128_64;
 
 typedef unique_base<uint8_t,  uint16_t, rxs_m_mixin>  unique_rxs_m_16_8;
 typedef unique_base<uint16_t, uint32_t, rxs_m_mixin>  unique_rxs_m_32_16;
 typedef unique_base<uint32_t, uint64_t, rxs_m_mixin>  unique_rxs_m_64_32;
 typedef unique_base<uint64_t, pcg128_t, rxs_m_mixin>  unique_rxs_m_128_64;
+typedef unique_base<uint64_t, pcg128_t, rxs_m_mixin, true, cheap_multiplier>
+                                                      cm_unique_rxs_m_128_64;
 
 typedef setseq_base<uint8_t,  uint16_t, rxs_m_mixin>  setseq_rxs_m_16_8;
 typedef setseq_base<uint16_t, uint32_t, rxs_m_mixin>  setseq_rxs_m_32_16;
 typedef setseq_base<uint32_t, uint64_t, rxs_m_mixin>  setseq_rxs_m_64_32;
 typedef setseq_base<uint64_t, pcg128_t, rxs_m_mixin>  setseq_rxs_m_128_64;
+typedef setseq_base<uint64_t, pcg128_t, rxs_m_mixin, true, cheap_multiplier>
+                                                      cm_setseq_rxs_m_128_64;
 
 typedef mcg_base<uint8_t,  uint16_t, rxs_m_mixin>  mcg_rxs_m_16_8;
 typedef mcg_base<uint16_t, uint32_t, rxs_m_mixin>  mcg_rxs_m_32_16;
 typedef mcg_base<uint32_t, uint64_t, rxs_m_mixin>  mcg_rxs_m_64_32;
 typedef mcg_base<uint64_t, pcg128_t, rxs_m_mixin>  mcg_rxs_m_128_64;
+typedef mcg_base<uint64_t, pcg128_t, rxs_m_mixin, true, cheap_multiplier>
+                                                   cm_mcg_rxs_m_128_64;
 
 /* Predefined types for XSL RR (only defined for "large" types) */
 
 typedef oneseq_base<uint32_t, uint64_t, xsl_rr_mixin>  oneseq_xsl_rr_64_32;
 typedef oneseq_base<uint64_t, pcg128_t, xsl_rr_mixin>  oneseq_xsl_rr_128_64;
+typedef oneseq_base<uint64_t, pcg128_t, xsl_rr_mixin, true, cheap_multiplier>
+                                                       cm_oneseq_xsl_rr_128_64;
 
 typedef unique_base<uint32_t, uint64_t, xsl_rr_mixin>  unique_xsl_rr_64_32;
 typedef unique_base<uint64_t, pcg128_t, xsl_rr_mixin>  unique_xsl_rr_128_64;
+typedef unique_base<uint64_t, pcg128_t, xsl_rr_mixin, true, cheap_multiplier>
+                                                       cm_unique_xsl_rr_128_64;
 
 typedef setseq_base<uint32_t, uint64_t, xsl_rr_mixin>  setseq_xsl_rr_64_32;
 typedef setseq_base<uint64_t, pcg128_t, xsl_rr_mixin>  setseq_xsl_rr_128_64;
+typedef setseq_base<uint64_t, pcg128_t, xsl_rr_mixin, true, cheap_multiplier>
+                                                       cm_setseq_xsl_rr_128_64;
 
 typedef mcg_base<uint32_t, uint64_t, xsl_rr_mixin>  mcg_xsl_rr_64_32;
 typedef mcg_base<uint64_t, pcg128_t, xsl_rr_mixin>  mcg_xsl_rr_128_64;
+typedef mcg_base<uint64_t, pcg128_t, xsl_rr_mixin, true, cheap_multiplier>
+                                                    cm_mcg_xsl_rr_128_64;
 
 
 /* Predefined types for XSL RR RR (only defined for "large" types) */
@@ -1656,16 +1717,22 @@ typedef oneseq_base<uint64_t, uint64_t, xsl_rr_rr_mixin>
     oneseq_xsl_rr_rr_64_64;
 typedef oneseq_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin>
     oneseq_xsl_rr_rr_128_128;
+typedef oneseq_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin, true, cheap_multiplier>
+    cm_oneseq_xsl_rr_rr_128_128;
 
 typedef unique_base<uint64_t, uint64_t, xsl_rr_rr_mixin>
     unique_xsl_rr_rr_64_64;
 typedef unique_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin>
     unique_xsl_rr_rr_128_128;
+typedef unique_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin, true, cheap_multiplier>
+    cm_unique_xsl_rr_rr_128_128;
 
 typedef setseq_base<uint64_t, uint64_t, xsl_rr_rr_mixin>
     setseq_xsl_rr_rr_64_64;
 typedef setseq_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin>
     setseq_xsl_rr_rr_128_128;
+typedef setseq_base<pcg128_t, pcg128_t, xsl_rr_rr_mixin, true, cheap_multiplier>
+    cm_setseq_xsl_rr_rr_128_128;
 
                 // MCG versions don't make sense here, so aren't defined.
 
