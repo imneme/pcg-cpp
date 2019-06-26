@@ -1143,6 +1143,7 @@ struct xsl_mixin {
     }
 };
 
+
 /* ---- End of Output Functions ---- */
 
 
