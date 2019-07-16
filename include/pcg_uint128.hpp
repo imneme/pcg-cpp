@@ -378,10 +378,10 @@ public:
     friend uint_x4<U,V> operator-(const uint_x4<U,V>&, const uint_x4<U,V>&);
 
     template<typename U, typename V>
-    friend uint_x4<U,V> operator<<(const uint_x4<U,V>&, const uint_x4<U,V>&);
+    friend uint_x4<U,V> operator<<(const uint_x4<U,V>&, const bitcount_t shift);
 
     template<typename U, typename V>
-    friend uint_x4<U,V> operator>>(const uint_x4<U,V>&, const uint_x4<U,V>&);
+    friend uint_x4<U,V> operator>>(const uint_x4<U,V>&, const bitcount_t shift);
 
     template<typename U, typename V>
     friend uint_x4<U,V> operator&(const uint_x4<U,V>&, const uint_x4<U,V>&);
