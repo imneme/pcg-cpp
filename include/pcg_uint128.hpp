@@ -369,6 +369,9 @@ public:
     friend uint_x4<U,V> operator*(const uint_x4<U,V>&, const uint_x4<U,V>&);
 
     template<typename U, typename V>
+    friend uint_x4<U,V> operator*(const uint_x4<U,V>&, V);
+
+    template<typename U, typename V>
     friend std::pair< uint_x4<U,V>,uint_x4<U,V> >
         divmod(const uint_x4<U,V>&, const uint_x4<U,V>&);
 
@@ -424,6 +427,12 @@ public:
     friend bitcount_t trailingzeros(const uint_x4<U,V>&);
 
     uint_x4& operator*=(const uint_x4& rhs)
+    {
+        uint_x4 result = *this * rhs;
+        return *this = result;
+    }
+
+    uint_x4& operator*=(UIntX2 rhs)
     {
         uint_x4 result = *this * rhs;
         return *this = result;
@@ -616,6 +625,51 @@ uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
     r.w.v3 = addwithcarry(r.w.v3, UInt(a1b1 >> UINT_BITS), carryin, &carryout);
 
     r.d.v23 += a.d.v01 * b.d.v23 + a.d.v23 * b.d.v01;
+
+    return r;
+}
+
+ 
+template <typename UInt, typename UIntX2>
+uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
+                               UIntX2 b01)
+{
+    constexpr auto UINT_BITS = uint_x4<UInt,UIntX2>::UINT_BITS;
+    uint_x4<UInt,UIntX2> r = {0U, 0U, 0U, 0U};
+    bool carryin = false;
+    bool carryout;
+    UIntX2 a0b0 = UIntX2(a.w.v0) * UIntX2(UInt(b01));
+    r.w.v0 = UInt(a0b0);
+    r.w.v1 = UInt(a0b0 >> UINT_BITS);
+
+    UIntX2 a1b0 = UIntX2(a.w.v1) * UIntX2(UInt(b01));
+    r.w.v2 = UInt(a1b0 >> UINT_BITS);
+    r.w.v1 = addwithcarry(r.w.v1, UInt(a1b0), carryin, &carryout);
+    carryin = carryout;
+    r.w.v2 = addwithcarry(r.w.v2, UInt(0U), carryin, &carryout);
+    carryin = carryout;
+    r.w.v3 = addwithcarry(r.w.v3, UInt(0U), carryin, &carryout);
+
+    UIntX2 a0b1 = UIntX2(a.w.v0) * UIntX2(b01 >> UINT_BITS);
+    carryin = false;
+    r.w.v2 = addwithcarry(r.w.v2, UInt(a0b1 >> UINT_BITS), carryin, &carryout);
+    carryin = carryout;
+    r.w.v3 = addwithcarry(r.w.v3, UInt(0U), carryin, &carryout);
+
+    carryin = false;
+    r.w.v1 = addwithcarry(r.w.v1, UInt(a0b1), carryin, &carryout);
+    carryin = carryout;
+    r.w.v2 = addwithcarry(r.w.v2, UInt(0U), carryin, &carryout);
+    carryin = carryout;
+    r.w.v3 = addwithcarry(r.w.v3, UInt(0U), carryin, &carryout);
+
+    UIntX2 a1b1 = UIntX2(a.w.v1) * UIntX2(b01 >> UINT_BITS);
+    carryin = false;
+    r.w.v2 = addwithcarry(r.w.v2, UInt(a1b1), carryin, &carryout);
+    carryin = carryout;
+    r.w.v3 = addwithcarry(r.w.v3, UInt(a1b1 >> UINT_BITS), carryin, &carryout);
+
+    r.d.v23 += a.d.v23 * b01;
 
     return r;
 }
