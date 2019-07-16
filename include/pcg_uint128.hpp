@@ -319,45 +319,13 @@ public:
         // Nothing (else) to do
     }
 
-    explicit constexpr operator uint64_t() const
+    template<class Integral,
+             typename std::enable_if<(std::is_integral<Integral>::value
+                                      && sizeof(Integral) <= sizeof(UIntX2))
+                                    >::type* = nullptr>
+    explicit constexpr operator Integral() const
     {
-        return d.v01;
-    }
-
-    explicit constexpr operator int64_t() const
-    {
-        return d.v01;
-    }
-
-    explicit constexpr operator uint32_t() const
-    {
-        return w.v0;
-    }
-
-    explicit constexpr operator int() const
-    {
-        return w.v0;
-    }
-
-    explicit constexpr operator uint16_t() const
-    {
-        return w.v0;
-    }
-
-    explicit constexpr operator uint8_t() const
-    {
-        return w.v0;
-    }
-
-    typedef typename std::conditional<std::is_same<uint64_t,
-                                                   unsigned long>::value,
-                                      unsigned long long,
-                                      unsigned long>::type
-            uint_missing_t;
-
-    explicit constexpr operator uint_missing_t() const
-    {
-        return d.v01;
+        return Integral(d.v01);
     }
 
     explicit constexpr operator bool() const
