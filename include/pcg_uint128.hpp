@@ -258,6 +258,7 @@ inline UInt subwithcarry(UInt x, UInt y, bool carryin, bool* carryout)
 template <typename UInt, typename UIntX2>
 class uint_x4 {
 // private:
+    static constexpr unsigned int UINT_BITS = sizeof(UInt) * CHAR_BIT;
 public:
     union {
 #if PCG_LITTLE_ENDIAN
@@ -495,7 +496,7 @@ bitcount_t flog2(const uint_x4<U,V>& v)
 #endif
         if (v.wa[i] == 0)
              continue;
-        return flog2(v.wa[i]) + (sizeof(U)*CHAR_BIT)*i;
+        return flog2(v.wa[i]) + uint_x4<U,V>::UINT_BITS*i;
     }
     abort();
 }
@@ -510,9 +511,9 @@ bitcount_t trailingzeros(const uint_x4<U,V>& v)
         --i;
 #endif
         if (v.wa[i] != 0)
-            return trailingzeros(v.wa[i]) + (sizeof(U)*CHAR_BIT)*i;
+            return trailingzeros(v.wa[i]) + uint_x4<U,V>::UINT_BITS*i;
     }
-    return (sizeof(U)*CHAR_BIT)*4;
+    return uint_x4<U,V>::UINT_BITS*4;
 }
 
 template <typename UInt, typename UIntX2>
@@ -579,15 +580,16 @@ template <typename UInt, typename UIntX2>
 uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
                                const uint_x4<UInt,UIntX2>& b)
 {
+    constexpr auto UINT_BITS = uint_x4<UInt,UIntX2>::UINT_BITS;
     uint_x4<UInt,UIntX2> r = {0U, 0U, 0U, 0U};
     bool carryin = false;
     bool carryout;
     UIntX2 a0b0 = UIntX2(a.w.v0) * UIntX2(b.w.v0);
     r.w.v0 = UInt(a0b0);
-    r.w.v1 = UInt(a0b0 >> 32);
+    r.w.v1 = UInt(a0b0 >> UINT_BITS);
 
     UIntX2 a1b0 = UIntX2(a.w.v1) * UIntX2(b.w.v0);
-    r.w.v2 = UInt(a1b0 >> 32);
+    r.w.v2 = UInt(a1b0 >> UINT_BITS);
     r.w.v1 = addwithcarry(r.w.v1, UInt(a1b0), carryin, &carryout);
     carryin = carryout;
     r.w.v2 = addwithcarry(r.w.v2, UInt(0U), carryin, &carryout);
@@ -596,7 +598,7 @@ uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
 
     UIntX2 a0b1 = UIntX2(a.w.v0) * UIntX2(b.w.v1);
     carryin = false;
-    r.w.v2 = addwithcarry(r.w.v2, UInt(a0b1 >> 32), carryin, &carryout);
+    r.w.v2 = addwithcarry(r.w.v2, UInt(a0b1 >> UINT_BITS), carryin, &carryout);
     carryin = carryout;
     r.w.v3 = addwithcarry(r.w.v3, UInt(0U), carryin, &carryout);
 
@@ -611,7 +613,7 @@ uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
     carryin = false;
     r.w.v2 = addwithcarry(r.w.v2, UInt(a1b1), carryin, &carryout);
     carryin = carryout;
-    r.w.v3 = addwithcarry(r.w.v3, UInt(a1b1 >> 32), carryin, &carryout);
+    r.w.v3 = addwithcarry(r.w.v3, UInt(a1b1 >> UINT_BITS), carryin, &carryout);
 
     r.d.v23 += a.d.v01 * b.d.v23 + a.d.v23 * b.d.v01;
 
@@ -736,7 +738,7 @@ uint_x4<UInt,UIntX2> operator<<(const uint_x4<UInt,UIntX2>& v,
                                 const bitcount_t shift)
 {
     uint_x4<UInt,UIntX2> r = {0U, 0U, 0U, 0U};
-    const bitcount_t bits    = sizeof(UInt) * CHAR_BIT;
+    const bitcount_t bits    = uint_x4<UInt,UIntX2>::UINT_BITS;
     const bitcount_t bitmask = bits - 1;
     const bitcount_t shiftdiv = shift / bits;
     const bitcount_t shiftmod = shift & bitmask;
@@ -771,7 +773,7 @@ uint_x4<UInt,UIntX2> operator>>(const uint_x4<UInt,UIntX2>& v,
                                 const bitcount_t shift)
 {
     uint_x4<UInt,UIntX2> r = {0U, 0U, 0U, 0U};
-    const bitcount_t bits    = sizeof(UInt) * CHAR_BIT;
+    const bitcount_t bits    = uint_x4<UInt,UIntX2>::UINT_BITS;
     const bitcount_t bitmask = bits - 1;
     const bitcount_t shiftdiv = shift / bits;
     const bitcount_t shiftmod = shift & bitmask;
