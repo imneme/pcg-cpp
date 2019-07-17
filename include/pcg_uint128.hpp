@@ -311,9 +311,9 @@ public:
                                     >::type* = nullptr>
     constexpr uint_x4(Integral v01)
 #if PCG_LITTLE_ENDIAN
-       : d{UIntX2(v01),0UL}
+       : d{UIntX2(v01), UIntX2(0)}
 #else
-       : d{0UL,UIntX2(v01)}
+       : d{UIntX2(0), UIntX2(v01)}
 #endif
     {
         // Nothing (else) to do
@@ -503,7 +503,7 @@ std::pair< uint_x4<UInt,UIntX2>, uint_x4<UInt,UIntX2> >
     // problematic because we can't take the log of zero.  (The boundary case
     // of division by zero is undefined.)
     if (orig_dividend < divisor)
-        return { uint_x4<UInt,UIntX2>(0UL), orig_dividend };
+        return { uint_x4<UInt,UIntX2>(UIntX2(0)), orig_dividend };
 
     auto dividend = orig_dividend;
 
@@ -512,7 +512,7 @@ std::pair< uint_x4<UInt,UIntX2>, uint_x4<UInt,UIntX2> >
     // assert(log2_dividend >= log2_divisor);
     bitcount_t logdiff = log2_dividend - log2_divisor;
 
-    constexpr uint_x4<UInt,UIntX2> ONE(1UL);
+    constexpr uint_x4<UInt,UIntX2> ONE(UIntX2(1));
     if (logdiff == 0)
         return { ONE, dividend - divisor };
 
@@ -521,7 +521,7 @@ std::pair< uint_x4<UInt,UIntX2>, uint_x4<UInt,UIntX2> >
     // to ensure that we *underestimate* the result.
     logdiff -= 1;
 
-    uint_x4<UInt,UIntX2> quotient(0UL);
+    uint_x4<UInt,UIntX2> quotient(UIntX2(0));
 
     auto qfactor = ONE << logdiff;
     auto factor  = divisor << logdiff;
