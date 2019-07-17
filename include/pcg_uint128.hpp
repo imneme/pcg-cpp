@@ -230,6 +230,45 @@ inline bitcount_t trailingzeros(uint64_t v)
 
 #endif
 
+inline bitcount_t flog2(uint8_t v)
+{
+    return flog2(uint32_t(v));
+}
+
+inline bitcount_t flog2(uint16_t v)
+{
+    return flog2(uint32_t(v));
+}
+
+#if __SIZEOF_INT128__
+inline bitcount_t flog2(__uint128_t v)
+{
+    uint64_t high = uint64_t(v >> 64);
+    uint64_t low  = uint64_t(v);
+
+    return high ? 64+flog2(high) : flog2(low);
+}
+#endif
+
+inline bitcount_t trailingzeros(uint8_t v)
+{
+    return trailingzeros(uint32_t(v));
+}
+
+inline bitcount_t trailingzeros(uint16_t v)
+{
+    return trailingzeros(uint32_t(v));
+}
+
+#if __SIZEOF_INT128__
+inline bitcount_t trailingzeros(__uint128_t v)
+{
+    uint64_t high = uint64_t(v >> 64);
+    uint64_t low  = uint64_t(v);
+    return low ? trailingzeros(low) : trailingzeros(high)+64;
+}
+#endif
+
 template <typename UInt>
 inline bitcount_t clog2(UInt v)
 {
