@@ -305,6 +305,16 @@ public:
         // Nothing (else) to do
     }
 
+    constexpr uint_x4(UIntX2 v01)
+#if PCG_LITTLE_ENDIAN
+       : d{v01, UIntX2(0)}
+#else
+       : d{UIntX2(0),v01}
+#endif
+    {
+        // Nothing (else) to do
+    }
+
     template<class Integral,
              typename std::enable_if<(std::is_integral<Integral>::value
                                       && sizeof(Integral) <= sizeof(UIntX2))
@@ -317,6 +327,11 @@ public:
 #endif
     {
         // Nothing (else) to do
+    }
+
+    explicit constexpr operator UIntX2() const
+    {
+        return d.v01;
     }
 
     template<class Integral,
