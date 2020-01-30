@@ -25,3 +25,6 @@ uint64_t next(void) {
 	s[3] = rotl(s[3], 45);
 	return result;
 }
+uint64_t range(uint64_t min, uint64_t max){
+	return next()%(max-min+1)+min;
+}
