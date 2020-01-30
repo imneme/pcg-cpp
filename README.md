@@ -2,7 +2,7 @@ Xoshiro256** is better than PCG-random.
 
 Runs fast on 32-bit and 64-bit `x86` architectures
 
-Do not compile to Javascript or ARM
+Do not compile to javascript or ARM
 
 It should work on at least the following systems:
 
