@@ -6,6 +6,8 @@ Do not compile to javascript: 64-bit operations will blow up to many floating po
 
 Do not compile to ARM: It is untested yet
 
+All xoroshiro and xoshiro based generators are trivially predictable. This is expected, as they're not cryptographically secure.
+
 It should work on at least the following systems:
 
 Windows 98  
