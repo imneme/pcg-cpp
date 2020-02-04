@@ -142,14 +142,14 @@ inline bitcount_t flog2(uint32_t v)
 {
     unsigned long i;
     _BitScanReverse(&i, v);
-    return i;
+    return bitcount_t(i);
 }
 
 inline bitcount_t trailingzeros(uint32_t v)
 {
     unsigned long i;
     _BitScanForward(&i, v);
-    return i;
+    return bitcount_t(i);
 }
 
 inline bitcount_t flog2(uint64_t v)
@@ -157,7 +157,7 @@ inline bitcount_t flog2(uint64_t v)
 #if defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64)
     unsigned long i;
     _BitScanReverse64(&i, v);
-    return i;
+    return bitcount_t(i);
 #else
     // 32-bit x86
     uint32_t high = v >> 32;
@@ -171,7 +171,7 @@ inline bitcount_t trailingzeros(uint64_t v)
 #if defined(_M_X64) || defined(_M_ARM) || defined(_M_ARM64)
     unsigned long i;
     _BitScanForward64(&i, v);
-    return i;
+    return bitcount_t(i);
 #else
     // 32-bit x86
     uint32_t high = v >> 32;
