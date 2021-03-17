@@ -517,10 +517,10 @@ public:
                && !std::is_convertible<SeedSeq, itype>::value
                && !std::is_convertible<SeedSeq, engine>::value,
         can_specify_stream_tag>::type = {})
-        : engine(generate_one<itype,1,2>(seedSeq),
-                 generate_one<itype,0,2>(seedSeq))
     {
-        // Nothing else to do.
+        itype seeddata[2];
+        generate_to<2>(std::forward<SeedSeq>(seedSeq), seeddata);
+        seed(seeddata[1], seeddata[0]);
     }
 
 
