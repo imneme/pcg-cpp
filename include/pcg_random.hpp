@@ -1476,6 +1476,8 @@ operator<<(std::basic_ostream<CharT,Traits>& out,
            const extended<table_pow2, advance_pow2,
                           baseclass, extvalclass, kdd>& rng)
 {
+    using pcg_extras::operator<<;
+
     auto orig_flags = out.flags(std::ios_base::dec | std::ios_base::left);
     auto space = out.widen(' ');
     auto orig_fill = out.fill();
@@ -1506,6 +1508,8 @@ operator>>(std::basic_istream<CharT,Traits>& in,
 
     if (in.fail())
         return in;
+
+    using pcg_extras::operator>>;
 
     auto orig_flags = in.flags(std::ios_base::dec | std::ios_base::skipws);
 
