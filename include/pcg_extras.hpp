@@ -74,7 +74,7 @@
  * direct CPU support.
  *
  */
-#if __SIZEOF_INT128__
+#if __SIZEOF_INT128__ && !PCG_FORCE_EMULATED_128BIT_MATH
     namespace pcg_extras {
         typedef __uint128_t pcg128_t;
     }
