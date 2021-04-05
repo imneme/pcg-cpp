@@ -1,7 +1,7 @@
 /*
  * PCG Random Number Generation for C++
  *
- * Copyright 2014-2017 Melissa O'Neill <oneill@pcg-random.org>,
+ * Copyright 2014-2021 Melissa O'Neill <oneill@pcg-random.org>,
  *                     and the PCG Project contributors.
  *
  * SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -75,6 +75,10 @@
     #else
         #error Unable to determine target endianness
     #endif
+#endif
+
+#if INTPTR_MAX == INT64_MAX && !defined(PCG_64BIT_SPECIALIZATIONS)
+    #define PCG_64BIT_SPECIALIZATIONS 1
 #endif
 
 namespace pcg_extras {
@@ -318,7 +322,6 @@ public:
         // For the array access versions, the code that uses the array
         // must handle endian itself.  Yuck.
         UInt wa[4];
-        UIntX2 da[2];
     };
 
 public:
@@ -547,6 +550,22 @@ bitcount_t trailingzeros(const uint_x4<U,V>& v)
     return uint_x4<U,V>::UINT_BITS*4;
 }
 
+#if PCG_64BIT_SPECIALIZATIONS
+template<>
+bitcount_t flog2<uint32_t,uint64_t>(const uint_x4<uint32_t,uint64_t>& v)
+{
+    return v.d.v23 > 0 ? flog2(v.d.v23) + uint_x4<uint32_t,uint64_t>::UINT_BITS*2
+                       : flog2(v.d.v01);
+}
+
+template<>
+bitcount_t trailingzeros<uint32_t,uint64_t>(const uint_x4<uint32_t,uint64_t>& v)
+{
+    return v.d.v01 == 0 ? trailingzeros(v.d.v23) + uint_x4<uint32_t,uint64_t>::UINT_BITS*2
+                        : trailingzeros(v.d.v01);
+}
+#endif
+
 template <typename UInt, typename UIntX2>
 std::pair< uint_x4<UInt,UIntX2>, uint_x4<UInt,UIntX2> >
     divmod(const uint_x4<UInt,UIntX2>& orig_dividend,
@@ -696,6 +715,30 @@ uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
     return r;
 }
 
+#if PCG_64BIT_SPECIALIZATIONS
+#if defined(_MSC_VER)
+#pragma intrinsic(_umul128)
+#endif
+
+#if defined(_MSC_VER) || __SIZEOF_INT128__
+template <>
+uint_x4<uint32_t,uint64_t> operator*(const uint_x4<uint32_t,uint64_t>& a,
+                                     const uint_x4<uint32_t,uint64_t>& b)
+{
+#if defined(_MSC_VER)
+    uint64_t hi;
+    uint64_t lo = _umul128(a.d.v01, b.d.v01, &hi);
+#else
+    __uint128_t r = __uint128_t(a.d.v01) * __uint128_t(b.d.v01);
+    uint64_t lo = uint64_t(r);
+    uint64_t hi = r >> 64;
+#endif
+    hi += a.d.v23 * b.d.v01 + a.d.v01 * b.d.v23;
+    return {hi, lo};
+}
+#endif
+#endif
+
 
 template <typename UInt, typename UIntX2>
 uint_x4<UInt,UIntX2> operator+(const uint_x4<UInt,UIntX2>& a,
@@ -735,6 +778,37 @@ uint_x4<UInt,UIntX2> operator-(const uint_x4<UInt,UIntX2>& a,
     return r;
 }
 
+#if PCG_64BIT_SPECIALIZATIONS
+template <>
+uint_x4<uint32_t,uint64_t> operator+(const uint_x4<uint32_t,uint64_t>& a,
+                                     const uint_x4<uint32_t,uint64_t>& b)
+{
+    uint_x4<uint32_t,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
+
+    bool carryin = false;
+    bool carryout;
+    r.d.v01 = addwithcarry(a.d.v01, b.d.v01, carryin, &carryout);
+    carryin = carryout;
+    r.d.v23 = addwithcarry(a.d.v23, b.d.v23, carryin, &carryout);
+
+    return r;
+}
+
+template <>
+uint_x4<uint32_t,uint64_t> operator-(const uint_x4<uint32_t,uint64_t>& a,
+                                     const uint_x4<uint32_t,uint64_t>& b)
+{
+    uint_x4<uint32_t,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
+
+    bool carryin = false;
+    bool carryout;
+    r.d.v01 = subwithcarry(a.d.v01, b.d.v01, carryin, &carryout);
+    carryin = carryout;
+    r.d.v23 = subwithcarry(a.d.v23, b.d.v23, carryin, &carryout);
+
+    return r;
+}
+#endif
 
 template <typename UInt, typename UIntX2>
 uint_x4<UInt,UIntX2> operator&(const uint_x4<UInt,UIntX2>& a,
@@ -878,6 +952,38 @@ uint_x4<UInt,UIntX2> operator>>(const uint_x4<UInt,UIntX2>& v,
 
     return r;
 }
+
+#if PCG_64BIT_SPECIALIZATIONS
+template <>
+uint_x4<uint32_t,uint64_t> operator<<(const uint_x4<uint32_t,uint64_t>& v,
+                                      const bitcount_t shift)
+{
+    constexpr bitcount_t bits2   = uint_x4<uint32_t,uint64_t>::UINT_BITS * 2;
+    
+    if (shift >= bits2) {
+        return {v.d.v01 << (shift-bits2), uint64_t(0u)};
+    } else {
+        return {shift ? (v.d.v23 << shift) | (v.d.v01 >> (bits2-shift)) 
+                      : v.d.v23,
+                v.d.v01 << shift};
+    }
+}
+
+template <>
+uint_x4<uint32_t,uint64_t> operator>>(const uint_x4<uint32_t,uint64_t>& v,
+                                      const bitcount_t shift)
+{
+    constexpr bitcount_t bits2   = uint_x4<uint32_t,uint64_t>::UINT_BITS * 2;
+    
+    if (shift >= bits2) {
+        return {uint64_t(0u), v.d.v23 >> (shift-bits2)};
+    } else {
+        return {v.d.v23 >> shift,
+                shift ? (v.d.v01 >> shift) | (v.d.v23 << (bits2-shift))
+                      : v.d.v01};
+    }
+}
+#endif
 
 } // namespace pcg_extras
 
