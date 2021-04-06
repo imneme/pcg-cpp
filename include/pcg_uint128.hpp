@@ -412,6 +412,14 @@ public:
     template<typename U, typename V>
     friend uint_x4<U,V> operator>>(const uint_x4<U,V>&, const bitcount_t shift);
 
+#if PCG_64BIT_SPECIALIZATIONS
+    template<typename U>
+    friend uint_x4<U,uint64_t> operator<<(const uint_x4<U,uint64_t>&, const bitcount_t shift);
+
+    template<typename U>
+    friend uint_x4<U,uint64_t> operator>>(const uint_x4<U,uint64_t>&, const bitcount_t shift);
+#endif
+
     template<typename U, typename V>
     friend uint_x4<U,V> operator&(const uint_x4<U,V>&, const uint_x4<U,V>&);
 
@@ -450,6 +458,14 @@ public:
 
     template<typename U, typename V>
     friend bitcount_t trailingzeros(const uint_x4<U,V>&);
+
+#if PCG_64BIT_SPECIALIZATIONS
+    template<typename U>
+    friend bitcount_t flog2(const uint_x4<U,uint64_t>&);
+
+    template<typename U>
+    friend bitcount_t trailingzeros(const uint_x4<U,uint64_t>&);
+#endif
 
     uint_x4& operator*=(const uint_x4& rhs)
     {
@@ -551,17 +567,17 @@ bitcount_t trailingzeros(const uint_x4<U,V>& v)
 }
 
 #if PCG_64BIT_SPECIALIZATIONS
-template<>
-bitcount_t flog2<uint32_t,uint64_t>(const uint_x4<uint32_t,uint64_t>& v)
+template<typename UInt32>
+bitcount_t flog2(const uint_x4<UInt32,uint64_t>& v)
 {
-    return v.d.v23 > 0 ? flog2(v.d.v23) + uint_x4<uint32_t,uint64_t>::UINT_BITS*2
+    return v.d.v23 > 0 ? flog2(v.d.v23) + uint_x4<UInt32,uint64_t>::UINT_BITS*2
                        : flog2(v.d.v01);
 }
 
-template<>
-bitcount_t trailingzeros<uint32_t,uint64_t>(const uint_x4<uint32_t,uint64_t>& v)
+template<typename UInt32>
+bitcount_t trailingzeros(const uint_x4<UInt32,uint64_t>& v)
 {
-    return v.d.v01 == 0 ? trailingzeros(v.d.v23) + uint_x4<uint32_t,uint64_t>::UINT_BITS*2
+    return v.d.v01 == 0 ? trailingzeros(v.d.v23) + uint_x4<UInt32,uint64_t>::UINT_BITS*2
                         : trailingzeros(v.d.v01);
 }
 #endif
@@ -721,9 +737,9 @@ uint_x4<UInt,UIntX2> operator*(const uint_x4<UInt,UIntX2>& a,
 #endif
 
 #if defined(_MSC_VER) || __SIZEOF_INT128__
-template <>
-uint_x4<uint32_t,uint64_t> operator*(const uint_x4<uint32_t,uint64_t>& a,
-                                     const uint_x4<uint32_t,uint64_t>& b)
+template <typename UInt32>
+uint_x4<UInt32,uint64_t> operator*(const uint_x4<UInt32,uint64_t>& a,
+				   const uint_x4<UInt32,uint64_t>& b)
 {
 #if defined(_MSC_VER)
     uint64_t hi;
@@ -779,11 +795,11 @@ uint_x4<UInt,UIntX2> operator-(const uint_x4<UInt,UIntX2>& a,
 }
 
 #if PCG_64BIT_SPECIALIZATIONS
-template <>
-uint_x4<uint32_t,uint64_t> operator+(const uint_x4<uint32_t,uint64_t>& a,
-                                     const uint_x4<uint32_t,uint64_t>& b)
+template <typename UInt32>
+uint_x4<UInt32,uint64_t> operator+(const uint_x4<UInt32,uint64_t>& a,
+				   const uint_x4<UInt32,uint64_t>& b)
 {
-    uint_x4<uint32_t,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
+    uint_x4<UInt32,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
 
     bool carryin = false;
     bool carryout;
@@ -794,11 +810,11 @@ uint_x4<uint32_t,uint64_t> operator+(const uint_x4<uint32_t,uint64_t>& a,
     return r;
 }
 
-template <>
-uint_x4<uint32_t,uint64_t> operator-(const uint_x4<uint32_t,uint64_t>& a,
-                                     const uint_x4<uint32_t,uint64_t>& b)
+template <typename UInt32>
+uint_x4<UInt32,uint64_t> operator-(const uint_x4<UInt32,uint64_t>& a,
+				   const uint_x4<UInt32,uint64_t>& b)
 {
-    uint_x4<uint32_t,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
+    uint_x4<UInt32,uint64_t> r = {uint64_t(0u), uint64_t(0u)};
 
     bool carryin = false;
     bool carryout;
@@ -954,11 +970,11 @@ uint_x4<UInt,UIntX2> operator>>(const uint_x4<UInt,UIntX2>& v,
 }
 
 #if PCG_64BIT_SPECIALIZATIONS
-template <>
-uint_x4<uint32_t,uint64_t> operator<<(const uint_x4<uint32_t,uint64_t>& v,
-                                      const bitcount_t shift)
+template <typename UInt32>
+uint_x4<UInt32,uint64_t> operator<<(const uint_x4<UInt32,uint64_t>& v,
+				    const bitcount_t shift)
 {
-    constexpr bitcount_t bits2   = uint_x4<uint32_t,uint64_t>::UINT_BITS * 2;
+    constexpr bitcount_t bits2   = uint_x4<UInt32,uint64_t>::UINT_BITS * 2;
     
     if (shift >= bits2) {
         return {v.d.v01 << (shift-bits2), uint64_t(0u)};
@@ -969,11 +985,11 @@ uint_x4<uint32_t,uint64_t> operator<<(const uint_x4<uint32_t,uint64_t>& v,
     }
 }
 
-template <>
-uint_x4<uint32_t,uint64_t> operator>>(const uint_x4<uint32_t,uint64_t>& v,
-                                      const bitcount_t shift)
+template <typename UInt32>
+uint_x4<UInt32,uint64_t> operator>>(const uint_x4<UInt32,uint64_t>& v,
+				    const bitcount_t shift)
 {
-    constexpr bitcount_t bits2   = uint_x4<uint32_t,uint64_t>::UINT_BITS * 2;
+    constexpr bitcount_t bits2   = uint_x4<UInt32,uint64_t>::UINT_BITS * 2;
     
     if (shift >= bits2) {
         return {uint64_t(0u), v.d.v23 >> (shift-bits2)};
