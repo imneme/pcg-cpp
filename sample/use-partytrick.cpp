@@ -20,8 +20,11 @@
  */
 
 /*
- * This program behaves like the spew program, the only difference is that
- * after 1 MB of output, the output gets "interesting" for a brief while.
+ * This program behaves like the spew program, but can accept a different state
+ * as input as CLI arguments. With just the right state, the output can get
+ * "interesting" for a brief while. For example, the default_state makes the
+ * output generate an interesting string just after 1MB of output.
+ *
  * See make-partytrick.cpp for more details.
  *
  * Typical usage:
@@ -40,7 +43,8 @@
 
 #include "pcg_random.hpp"
 
-static const char* saved_state = 
+/* Default state to use if no state is given as arguments. */
+static const char* default_state =
  "6364136223846793005 3503324247726078831 6557656048857751321 103238831 "
  "665891259 1902651333 4073047566 368781010 3371458373 3520911659 1176018374 "
  "1290944887 2479283234 2214499777 3287447736 4241043352 2808175048 83300271 "
@@ -52,11 +56,17 @@ static const char* saved_state =
  "1413186342 1718872307 2898301505 1732438719 622306094 366401535 2963949396 "
  "2676833081 98878999 999895120 425860638 4096143638 4063627507 2566817785";
 
-
-int main()
+int main(int argc, char *argv[])
 {
     pcg32_k64 rng;
-    std::istringstream inbuf(saved_state);
+
+    std::string args;
+    for (int i = 1; i < argc; i++) {
+        args += argv[i];
+        args += " ";
+    }
+
+    std::istringstream inbuf(argc == 68 ? args.c_str() : default_state);
     inbuf >> rng;
     std::clog << inbuf.str() << "\n\n";
     if (inbuf.fail())
@@ -65,7 +75,7 @@ int main()
     constexpr size_t BUFFER_SIZE = 1024ull * 128ull;
     uint32_t buffer[BUFFER_SIZE];
     constexpr size_t ROUNDS      = 215 * 1073741824ull / sizeof(buffer);
-    
+
     for (size_t i = 0; i < ROUNDS; ++i) {
         for (auto& v : buffer)
             v = rng();
@@ -74,6 +84,3 @@ int main()
 
     return 0;
 }
-
-    
-    
