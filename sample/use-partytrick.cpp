@@ -36,11 +36,16 @@
 #include <string>
 #include <random>
 
-#include <unistd.h>
+// We use POSIX read/write for binary I/O
+#if defined(__unix__) || defined (__CYGWIN__) || defined (__APPLE__)
+  #include <unistd.h>
+#else
+  #include <io.h>
+#endif
 
 #include "pcg_random.hpp"
 
-static const char* saved_state = 
+static const char* saved_state =
  "6364136223846793005 3503324247726078831 6557656048857751321 103238831 "
  "665891259 1902651333 4073047566 368781010 3371458373 3520911659 1176018374 "
  "1290944887 2479283234 2214499777 3287447736 4241043352 2808175048 83300271 "
@@ -65,7 +70,7 @@ int main()
     constexpr size_t BUFFER_SIZE = 1024ull * 128ull;
     uint32_t buffer[BUFFER_SIZE];
     constexpr size_t ROUNDS      = 215 * 1073741824ull / sizeof(buffer);
-    
+
     for (size_t i = 0; i < ROUNDS; ++i) {
         for (auto& v : buffer)
             v = rng();
@@ -74,6 +79,3 @@ int main()
 
     return 0;
 }
-
-    
-    

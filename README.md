@@ -1,5 +1,11 @@
 # PCG Random Number Generation, C++ Edition
 
+[![Build Status][unix-img]][unix-link] ![License][license-img]
+
+[unix-img]: https://img.shields.io/travis/com/imneme/pcg-cpp/master.svg
+[unix-link]: https://travis-ci.com/imneme/pcg-cpp
+[license-img]: https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg
+
 [PCG-Random website]: http://www.pcg-random.org
 
 This code provides an implementation of the PCG family of random number
@@ -24,22 +30,40 @@ Visit [PCG-Random website] for information on how to use this library, or look
 at the sample code in the `sample` directory -- hopefully it should be fairly
 self explanatory.
 
-## Building
+## Building, Testing and Installing
 
 The code is written in C++11, as an include-only library (i.e., there is
-nothing you need to build).  There are some provided demo programs and tests
-however.  On a Unix-style system (e.g., Linux, Mac OS X) you should be able
-to just type
+nothing you need to build).
 
-    make
+There are some provided demo programs and tests however. We provide a
+[CMake](https://cmake.org/)-based building and testing functionality. If you
+do not have CMake installed on your system, you can
+[download](https://cmake.org/download/) the latest version. Once installed, you
+can run
 
-To build the demo programs.
+```bash
+mkdir build
+cd build
+cmake ../
+cmake --build .
+cmake --build . --target test
+cmake --build . --target install
+```
 
-## Testing
+Above, CMake creates necessary files inside the `build` folder, builds the demo
+programs, performs the tests, and finally installs the header files and demo
+programs to the `include` and `bin` folders, respectively, in the default system
+path. You can append `-D CMAKE_INSTALL_PREFIX=<folder_name>` to change the
+default (system) path. For instance, if you would like to install the files in
+the `install` folder under the current path, simply run
 
-Run
-
-    make test
+```bash
+mkdir build install
+cd build
+cmake -D CMAKE_INSTALL_PREFIX=../install ../
+cmake --build .
+cmake --build . --target install
+```
 
 ## Directory Structure
 
@@ -48,5 +72,5 @@ The directories are arranged as follows:
 * `include` -- contains `pcg_random.hpp` and supporting include files
 * `test-high` -- test code for the high-level API where the functions have
   shorter, less scary-looking names.
-* `sample` -- sample code, some similar to the code in `test-high` but more 
+* `sample` -- sample code, some similar to the code in `test-high` but more
   human readable, some other examples too
