@@ -30,6 +30,7 @@
 #include <cassert>
 #include <climits>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <algorithm>
 #include <numeric>
@@ -139,8 +140,9 @@ int main(int argc, char** argv)
         printf("  Rolls:");
         for (int i = 0; i < 33; ++i)
             cout << " " << (uint32_t(rng(6)) + 1);
-        cout << "\n   -->   rolling dice used " 
-             << (rng - rng_copy) << " random numbers" << endl;
+        cout << "\n   -->   rolling dice used "
+             << static_cast<size_t>(rng - rng_copy)
+             << " random numbers" << endl;
 
         /* Deal some cards using pcg_extras::shuffle, which follows
          * the algorithm for shuffling that most programmers would expect.
@@ -166,6 +168,13 @@ int main(int argc, char** argv)
         
         cout << "\n" << endl;
     }
+
+    // Ensure that the input/output functions work.
+    std::stringstream ss;
+    ss << rng;
+    RNG from_string;
+    ss >> from_string;
+    assert(from_string == rng);
 
     return 0;
 }

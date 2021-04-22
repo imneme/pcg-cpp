@@ -114,11 +114,21 @@ namespace pcg_extras {
  *
  * This code provides enough functionality to print 128-bit ints in decimal
  * and zero-padded in hex.  It's not a full-featured implementation.
+ *
+ * Note that we cannot simply define operator<< implementations,
+ * because pcg128_t is (sometimes!) a typedef; Koenig lookup on typedefs
+ * looks at the resolved type, which is __uint128_t in the global namespace.
  */
+
+template <typename CharT, typename Traits, typename T>
+std::basic_ostream<CharT, Traits>&
+Output(std::basic_ostream<CharT, Traits>& out, const T &t) {
+  return out << t;
+}
 
 template <typename CharT, typename Traits>
 std::basic_ostream<CharT,Traits>&
-operator<<(std::basic_ostream<CharT,Traits>& out, pcg128_t value)
+Output(std::basic_ostream<CharT,Traits>& out, pcg128_t value)
 {
     auto desired_base = out.flags() & out.basefield;
     bool want_hex = desired_base == out.hex;
@@ -160,9 +170,15 @@ operator<<(std::basic_ostream<CharT,Traits>& out, pcg128_t value)
     return out << pos;
 }
 
+template <typename CharT, typename Traits, typename T>
+std::basic_istream<CharT, Traits>&
+Input(std::basic_istream<CharT, Traits>& in, T &t) {
+  return in >> t;
+}
+
 template <typename CharT, typename Traits>
 std::basic_istream<CharT,Traits>&
-operator>>(std::basic_istream<CharT,Traits>& in, pcg128_t& value)
+Input(std::basic_istream<CharT,Traits>& in, pcg128_t& value)
 {
     typename std::basic_istream<CharT,Traits>::sentry s(in);
 
