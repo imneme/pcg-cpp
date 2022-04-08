@@ -175,8 +175,10 @@ operator>>(std::basic_istream<CharT,Traits>& in, pcg128_t& value)
     bool overflow = false;
     for(;;) {
         CharT wide_ch = in.get();
-        if (!in.good())
+        if (!in.good()) {
+            in.clear(std::ios::eofbit);
             break;
+        }
         auto ch = in.narrow(wide_ch, '\0');
         if (ch < '0' || ch > '9') {
             in.unget();
