@@ -1897,9 +1897,9 @@ typedef pcg_engines::ext_oneseq_xsh_rs_64_32<1,32,true>     pcg32_k2_fast;
 // These eight extended RNGs have about as much state as arc4random
 //
 //  - the k variants are k-dimensionally equidistributed
-//  - the c variants offer better cryptographic security
+//  - the c variants offer are intended to be harder to predict
 //
-// (just how good the cryptographic security is is an open question)
+// (neither is intended for use in cryptographic applications)
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<6,16,true>     pcg32_k64;
 typedef pcg_engines::ext_mcg_xsh_rs_64_32<6,32,true>        pcg32_k64_oneseq;
@@ -1920,9 +1920,9 @@ typedef pcg_engines::ext_mcg_xsl_rr_128_64<5,128,false>     pcg64_c32_fast;
 // These eight extended RNGs have more state than the Mersenne twister
 //
 //  - the k variants are k-dimensionally equidistributed
-//  - the c variants offer better cryptographic security
+//  - the c variants offer are intended to be harder to predict
 //
-// (just how good the cryptographic security is is an open question)
+// (neither is intended for use in cryptographic applications)
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<10,16,true>    pcg32_k1024;
 typedef pcg_engines::ext_oneseq_xsh_rs_64_32<10,32,true>    pcg32_k1024_fast;
