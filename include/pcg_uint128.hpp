@@ -105,20 +105,20 @@ namespace pcg_extras {
 
 inline bitcount_t flog2(uint32_t v)
 {
-    return 31 - __builtin_clz(v);
+    return bitcount_t(31 - __builtin_clz(v));
 }
 
 inline bitcount_t trailingzeros(uint32_t v)
 {
-    return __builtin_ctz(v);
+    return bitcount_t(__builtin_ctz(v));
 }
 
 inline bitcount_t flog2(uint64_t v)
 {
 #if UINT64_MAX == ULONG_MAX
-    return 63 - __builtin_clzl(v);
+    return bitcount_t(63 - __builtin_clzl(v));
 #elif UINT64_MAX == ULLONG_MAX
-    return 63 - __builtin_clzll(v);
+    return bitcount_t(63 - __builtin_clzll(v));
 #else
     #error Cannot find a function for uint64_t
 #endif
@@ -127,9 +127,9 @@ inline bitcount_t flog2(uint64_t v)
 inline bitcount_t trailingzeros(uint64_t v)
 {
 #if UINT64_MAX == ULONG_MAX
-    return __builtin_ctzl(v);
+    return bitcount_t(__builtin_ctzl(v));
 #elif UINT64_MAX == ULLONG_MAX
-    return __builtin_ctzll(v);
+    return bitcount_t(__builtin_ctzll(v));
 #else
     #error Cannot find a function for uint64_t
 #endif

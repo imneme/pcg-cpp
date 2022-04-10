@@ -628,6 +628,9 @@ private:
 public:
     static constexpr IntType value = fnv(IntType(2166136261U ^ sizeof(IntType)),
                         __DATE__ __TIME__ __FILE__);
+
+    //Prevent creation, while keeping GCC from giving a warning
+    static_arbitrary_seed() = delete;
 };
 
 // Sometimes, when debugging or testing, it's handy to be able print the name
