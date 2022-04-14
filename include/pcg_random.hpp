@@ -410,16 +410,26 @@ public:
     }
 
 protected:
+
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     itype bump(itype state)
     {
         return state * multiplier() + increment();
     }
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     itype base_generate()
     {
         return state_ = bump(state_);
     }
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     itype base_generate0()
     {
         itype old_state = state_;
@@ -428,6 +438,9 @@ protected:
     }
 
 public:
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     result_type operator()()
     {
         if (output_previous)
@@ -436,12 +449,18 @@ public:
             return this->output(base_generate());
     }
 
+#ifdef __CUDACC__
+    __host__  __device__
+#endif
     result_type operator()(result_type upper_bound)
     {
         return bounded_rand(*this, upper_bound);
     }
 
 protected:
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static itype advance(itype state, itype delta,
                          itype cur_mult, itype cur_plus);
 
@@ -454,6 +473,9 @@ protected:
     }
 
 public:
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     void advance(itype delta)
     {
         state_ = advance(state_, delta, this->multiplier(), this->increment());
@@ -464,6 +486,9 @@ public:
         advance(-delta);
     }
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     void discard(itype delta)
     {
         advance(delta);
@@ -481,6 +506,9 @@ public:
         }
     }
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     engine(itype state = itype(0xcafef00dd15ea5e5ULL))
         : state_(this->is_mcg ? state|state_type(3U)
                               : bump(state + this->increment()))
@@ -490,8 +518,10 @@ public:
 
     // This function may or may not exist.  It thus has to be a template
     // to use SFINAE; users don't have to worry about its template-ness.
-
     template <typename sm = stream_mixin>
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     engine(itype state, typename sm::stream_state stream_seed)
         : stream_mixin(stream_seed),
           state_(this->is_mcg ? state|state_type(3U)
@@ -501,6 +531,9 @@ public:
     }
 
     template<typename SeedSeq>
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     engine(SeedSeq&& seedSeq, typename std::enable_if<
                   !stream_mixin::can_specify_stream
                && !std::is_convertible<SeedSeq, itype>::value
@@ -512,6 +545,9 @@ public:
     }
 
     template<typename SeedSeq>
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     engine(SeedSeq&& seedSeq, typename std::enable_if<
                    stream_mixin::can_specify_stream
                && !std::is_convertible<SeedSeq, itype>::value
@@ -640,6 +676,9 @@ operator>>(std::basic_istream<CharT,Traits>& in,
 template <typename xtype, typename itype,
           typename output_mixin, bool output_previous,
           typename stream_mixin, typename multiplier_mixin>
+#ifdef __CUDACC__
+__host__ __device__
+#endif
 itype engine<xtype,itype,output_mixin,output_previous,stream_mixin,
              multiplier_mixin>::advance(
     itype state, itype delta, itype cur_mult, itype cur_plus)
@@ -810,6 +849,9 @@ using mcg_base = engine<xtype, itype,
 
 template <typename xtype, typename itype>
 struct xsh_rs_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t bits        = bitcount_t(sizeof(itype) * 8);
@@ -843,6 +885,9 @@ struct xsh_rs_mixin {
 
 template <typename xtype, typename itype>
 struct xsh_rr_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t bits        = bitcount_t(sizeof(itype) * 8);
@@ -878,6 +923,9 @@ struct xsh_rr_mixin {
 
 template <typename xtype, typename itype>
 struct rxs_mixin {
+#ifdef __CUDACC__
+__host__ __device__
+#endif
 static xtype output_rxs(itype internal)
     {
         constexpr bitcount_t bits        = bitcount_t(sizeof(itype) * 8);
@@ -944,6 +992,9 @@ PCG_DEFINE_CONSTANT(pcg128_t, mcg, unmultiplier,
 
 template <typename xtype, typename itype>
 struct rxs_m_xs_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -992,6 +1043,9 @@ struct rxs_m_xs_mixin {
 
 template <typename xtype, typename itype>
 struct rxs_m_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -1030,6 +1084,9 @@ struct rxs_m_mixin {
 
 template <typename xtype, typename itype>
 struct dxsm_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     inline xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -1058,6 +1115,9 @@ struct dxsm_mixin {
 
 template <typename xtype, typename itype>
 struct xsl_rr_mixin {
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -1104,6 +1164,9 @@ template <typename xtype, typename itype>
 struct xsl_rr_rr_mixin {
     typedef typename halfsize_trait<itype>::type htype;
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static itype output(itype internal)
     {
         constexpr bitcount_t htypebits = bitcount_t(sizeof(htype) * 8);
@@ -1144,6 +1207,10 @@ struct xsl_rr_rr_mixin {
 
 template <typename xtype, typename itype>
 struct xsh_mixin {
+
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     static xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -1167,6 +1234,10 @@ struct xsh_mixin {
 
 template <typename xtype, typename itype>
 struct xsl_mixin {
+
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     inline xtype output(itype internal)
     {
         constexpr bitcount_t xtypebits = bitcount_t(sizeof(xtype) * 8);
@@ -1293,6 +1364,9 @@ public:
         return baseclass::period_pow2() + table_size*extvalclass::period_pow2();
     }
 
+#ifdef __CUDACC__
+    __host__ __device__
+#endif
     PCG_ALWAYS_INLINE result_type operator()()
     {
         result_type rhs = get_extended_value();
