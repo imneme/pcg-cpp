@@ -39,10 +39,8 @@
 #include <cstring>
 #include <cassert>
 #include <limits>
-#include <iostream>
 #include <type_traits>
 #include <utility>
-#include <locale>
 #include <iterator>
 
 #ifdef __GNUC__
