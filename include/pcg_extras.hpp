@@ -263,21 +263,11 @@ inline std::istream& operator>>(std::istream& in, uint8_t& value)
 template <typename itype>
 inline itype unxorshift(itype x, bitcount_t bits, bitcount_t shift)
 {
-    if (2*shift >= bits) {
-        return x ^ (x >> shift);
-    }
-    itype lowmask1 = (itype(1U) << (bits - shift*2)) - 1;
-    itype highmask1 = ~lowmask1;
-    itype top1 = x;
-    itype bottom1 = x & lowmask1;
-    top1 ^= top1 >> shift;
-    top1 &= highmask1;
-    x = top1 | bottom1;
-    itype lowmask2 = (itype(1U) << (bits - shift)) - 1;
-    itype bottom2 = x & lowmask2;
-    bottom2 = unxorshift(bottom2, bits - shift, shift);
-    bottom2 &= lowmask1;
-    return top1 | bottom2;
+    do {
+        x ^= x >> shift;
+        shift *= 2u;
+    } while(shift < bits);
+    return x;
 }
 
 /*
