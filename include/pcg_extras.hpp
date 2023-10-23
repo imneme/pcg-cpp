@@ -282,11 +282,6 @@ inline itype unxorshift(itype x, bitcount_t bits, bitcount_t shift)
 
 /*
  * Rotate left and right.
- *
- * In ideal world, compilers would spot idiomatic rotate code and convert it
- * to a rotate instruction.  Of course, opinions vary on what the correct
- * idiom is and how to spot it.  For clang, sometimes it generates better
- * (but still crappy) code if you define PCG_USE_ZEROCHECK_ROTATE_IDIOM.
  */
 
 template <typename itype>
@@ -294,11 +289,8 @@ inline itype rotl(itype value, bitcount_t rot)
 {
     constexpr bitcount_t bits = sizeof(itype) * 8;
     constexpr bitcount_t mask = bits - 1;
-#if PCG_USE_ZEROCHECK_ROTATE_IDIOM
-    return rot ? (value << rot) | (value >> (bits - rot)) : value;
-#else
+    rot &= mask;
     return (value << rot) | (value >> ((- rot) & mask));
-#endif
 }
 
 template <typename itype>
@@ -306,19 +298,17 @@ inline itype rotr(itype value, bitcount_t rot)
 {
     constexpr bitcount_t bits = sizeof(itype) * 8;
     constexpr bitcount_t mask = bits - 1;
-#if PCG_USE_ZEROCHECK_ROTATE_IDIOM
-    return rot ? (value >> rot) | (value << (bits - rot)) : value;
-#else
+    rot &= mask;
     return (value >> rot) | (value << ((- rot) & mask));
-#endif
 }
 
-/* Unfortunately, both Clang and GCC sometimes perform poorly when it comes
- * to properly recognizing idiomatic rotate code, so for we also provide
- * assembler directives (enabled with PCG_USE_INLINE_ASM).  Boo, hiss.
- * (I hope that these compilers get better so that this code can die.)
+/* Older versions of this library with older versions of clang and gcc
+ * fail to infer rotation instructions. Inference is preferable to inline
+ * assembly when it works though. If you are on a gcc >= 4.9.0 or a clang
+ * >= 11.0 you should not use PCG_USE_INLINE_ASM.
  *
- * These overloads will be preferred over the general template code above.
+ * When PCG_USE_INLINE_ASM is set, these overloads will be preferred
+ * over the general template code above.
  */
 #if PCG_USE_INLINE_ASM && __GNUC__ && (__x86_64__  || __i386__)
 
