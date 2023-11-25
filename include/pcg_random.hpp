@@ -333,7 +333,7 @@ public:
 
     void set_stream(itype specific_seq)
     {
-         inc_ = (specific_seq << 1) | 1;
+         inc_ = (specific_seq << 1) | itype(1U);
     }
 
     static constexpr bool can_specify_stream = true;
@@ -618,7 +618,7 @@ operator>>(std::basic_istream<CharT,Traits>& in,
 
     if (!in.fail()) {
         bool good = true;
-        if (multiplier != rng.multiplier()) {
+        if (multiplier != itype(rng.multiplier())) {
            good = false;
         } else if (rng.can_specify_stream) {
            rng.set_stream(increment >> 1);
