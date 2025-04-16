@@ -333,7 +333,7 @@ public:
 
     void set_stream(itype specific_seq)
     {
-         inc_ = (specific_seq << 1) | 1;
+         inc_ = (specific_seq << 1) | static_cast<itype>(1u);
     }
 
     static constexpr bool can_specify_stream = true;
@@ -1868,10 +1868,20 @@ typedef pcg_engines::oneseq_xsh_rr_64_32        pcg32_oneseq;
 typedef pcg_engines::unique_xsh_rr_64_32        pcg32_unique;
 typedef pcg_engines::mcg_xsh_rs_64_32           pcg32_fast;
 
+typedef pcg_engines::setseq_dxsm_64_32          pcg32_dxsm;
+typedef pcg_engines::oneseq_dxsm_64_32          pcg32_dxsm_oneseq;
+typedef pcg_engines::unique_dxsm_64_32          pcg32_dxsm_unique;
+typedef pcg_engines::mcg_dxsm_64_32             pcg32_dxsm_fast;
+
 typedef pcg_engines::setseq_xsl_rr_128_64       pcg64;
 typedef pcg_engines::oneseq_xsl_rr_128_64       pcg64_oneseq;
 typedef pcg_engines::unique_xsl_rr_128_64       pcg64_unique;
 typedef pcg_engines::mcg_xsl_rr_128_64          pcg64_fast;
+
+typedef pcg_engines::setseq_dxsm_128_64         pcg64_dxsm;
+typedef pcg_engines::oneseq_dxsm_128_64         pcg64_dxsm_oneseq;
+typedef pcg_engines::unique_dxsm_128_64         pcg64_dxsm_unique;
+typedef pcg_engines::mcg_dxsm_128_64            pcg64_dxsm_fast;
 
 typedef pcg_engines::setseq_rxs_m_xs_8_8        pcg8_once_insecure;
 typedef pcg_engines::setseq_rxs_m_xs_16_16      pcg16_once_insecure;
@@ -1902,8 +1912,8 @@ typedef pcg_engines::ext_oneseq_xsh_rs_64_32<1,32,true>     pcg32_k2_fast;
 // (neither is intended for use in cryptographic applications)
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<6,16,true>     pcg32_k64;
-typedef pcg_engines::ext_mcg_xsh_rs_64_32<6,32,true>        pcg32_k64_oneseq;
-typedef pcg_engines::ext_oneseq_xsh_rs_64_32<6,32,true>     pcg32_k64_fast;
+typedef pcg_engines::ext_oneseq_xsh_rs_64_32<6,32,true>     pcg32_k64_oneseq;
+typedef pcg_engines::ext_mcg_xsh_rs_64_32<6,32,true>        pcg32_k64_fast;
 
 typedef pcg_engines::ext_setseq_xsh_rr_64_32<6,16,false>    pcg32_c64;
 typedef pcg_engines::ext_oneseq_xsh_rs_64_32<6,32,false>    pcg32_c64_oneseq;

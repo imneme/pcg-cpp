@@ -583,9 +583,9 @@ class seed_seq_from {
 private:
     RngType rng_;
 
+public:
     typedef uint_least32_t result_type;
 
-public:
     template<typename... Args>
     seed_seq_from(Args&&... args) :
         rng_(std::forward<Args>(args)...)
