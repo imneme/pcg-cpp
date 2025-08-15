@@ -94,5 +94,6 @@ else
         echo All tests except tests awkward tests with 128-bit math succceed.
     else
         echo ERROR: Some tests failed.
+        exit 1
     fi
 fi
